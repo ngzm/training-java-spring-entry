@@ -1,2 +1,13 @@
 # for MAC
 .DS_Store
+
+# bundler
+Gemfile.lock
+vendor
+.bundle
+
+# sass
+.sass-cache
+
+# jekyll
+_site

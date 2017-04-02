@@ -1,1 +1,24 @@
-theme: jekyll-theme-cayman
+# Setup
+## title:     Spring Framework - ENTRY -
+## tagline:   Spring Framework 入門
+title:        Spring Framework 入門
+tagline:      ngzm
+baseurl:      ""
+paginate:     1
+
+# About/contact
+author:
+  name:       Naoki Nagazumi
+  url:        https://github.com/ngzm
+
+# Gems
+gems:
+  - jekyll-paginate
+
+# Collections
+collections:
+  handsons:
+    output:   true
+
+#Others
+markdown: kramdown
