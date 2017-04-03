@@ -1,8 +1,8 @@
 # for MAC
 .DS_Store
+Thumbs.db
 
 # bundler
-Gemfile.lock
 vendor
 .bundle
 
@@ -11,3 +11,7 @@ vendor
 
 # jekyll
 _site
+
+.rbenv-version
+.rvmrc
+.ruby-version

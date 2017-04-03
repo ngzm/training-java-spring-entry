@@ -1,6 +1,7 @@
 ---
 layout: handson
-title: Spring ENTRY STEP07
+title:  Spring ENTRY STEP07
+date:   2017-04-03
 ---
 
 # Spring Framework 入門
