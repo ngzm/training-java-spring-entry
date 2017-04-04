@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP01
+step:   "STEP01"
+title:  "開発環境構築 & Hello World"
 date:   2017-04-02
 ---
-
-# Spring Framework 入門
-### STEP 01 / 開発環境構築 ＆ Hello World
-***
-
 ## 1. 開発環境構築に必要なソフトウェア
 #### 1-1. ソフトウェア一覧
 | # | カテゴリ | 製品名 | バージョン | 備考 |

@@ -1,13 +1,15 @@
 ---
 layout: default
-title:  TOP
+step:   "HOME"
+title:  "Spring Framework 入門"
 ---
-
 <div id="home">
   <h1>Blog Posts</h1>
   <ul class="posts">
     {% for handson in site.handsons %}
-      <li><a href="{{ site.baseurl }}{{ handson.url }}">{{ handson.title }}</a></li>
+      <li><a href="{{ site.baseurl }}{{ handson.url }}">
+          {{ handson.step }} - {{ handson.title }}
+      </a></li>
     {% endfor %}
   </ul>
 </div>

@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP08
+step:   "STEP08"
+title:  "AOP を使ってみる！"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-### STEP 08 / AOP を使ってみる！
-***
-
 ## 1. AOP が使えるように準備しよう
 #### 1-1. Maven に Spring AOP ライブラリを追加
 ###### 1-1-1. /pom.xml に Spring AOP に必要となるライブラリ定義を追加

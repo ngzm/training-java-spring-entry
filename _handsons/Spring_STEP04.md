@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP04
+step:   "STEP04"
+title:  "Spring JDBC による書籍テーブル検索"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-### STEP 04 / Spring JDBC による書籍テーブル検索
-***
-
 ## 1. PostgreSQL データベースを構築する
 #### 1-1. データベースのセットアップ
 ###### 1-1-1. PostgreSQL インストール

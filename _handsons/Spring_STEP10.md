@@ -1,500 +1,351 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP10
+step:   "STEP10"
+title:  "テストコードの書き方を覚えよう！その2 結合テスト"
 date:   2017-04-03
 ---
+### Webアプリケーション全体をテストしてみる
+今回は、模擬的なHTTPリクエストを発行して、作成したWebアプリケーション全体、つまり Controller - Service - Dao を一気通貫に動作させてテストする方法を学習します。総合テストやシナリオテストに応用可能な手法です。
 
-# Spring Framework 入門
-### STEP 10 / ログイン認証とトランザクション管理
 ***
 
-## 1. ログイン認証を実装する
-#### 1-1. 認証ライブラリ Spring Security を利用するための準備
-###### 1-1-1. /pom.xml
-ここでは、Spring フレームワークが提供する Spring Security を利用した認証方法を学習します。  
-以下の通りに、pom.xml の2箇所に Spring Security の定義を追加してください。
+## 1. テストカバレッジを可視化しよう
+#### 1-1. テストのカバレッジを可視化するツール EclEmma を導入
+###### 1-1-1. EclEmma（Eclipse Plugin）導入
+```
+EclEmma インストール
 
-```xml
-◆
-◆ 省略
-◆ -- 9行目付近 -- <org.springfsecurity-version> の定義を追加してください。
-◆
-    <properties>
-        <org.springframework-version>4.2.8.RELEASE</org.springframework-version>
-        <org.springfsecurity-version>4.0.4.RELEASE</org.springfsecurity-version>  ◆◆◆ この行だけ追加 ◆◆◆
-        <org.slf4j-version>1.7.21</org.slf4j-version>
-    </properties>
+  [Help]→[Eclipse MarketPlace]
+  検索画面で "EclEmma" を検索し以下のツールをインストールする。
+  -----------------
+  EclEmma Java Code Coverage 2.3.3
+  -----------------
 
-◆
-◆ 省略
-◆
-    ◆
-    ◆ -- 77行目付近
-    ◆
-        <!-- Validation -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.1.3.Final</version>
-        </dependency>
+  プラグインは全て選択してインストール→[再起動]
+```
+
+###### 1-1-2. EclEmma でカバレッジリポートを出力する対象を設定する
+```
+1.カバレッジコンフィグレーション画面を出す。
+  Package Explorerでプロジェクト[bookMgr]選択し右クリック→[Coverage As]→[Coverage Configurations]..
+
+2.カバレッジレポート対象範囲を設定
+  [Coverage]タブを選択すると候補となるスコープ（フォルダやライブラリ）一覧が表示される。
+  今回の対象は[bookMgr–src/main/java]なので、そこだけにチェックを入れた状態で[Apply]する。
+```
+
+###### 1-1-3. テストコードを実行してカバレッジリポートを出力する
+```
+1.プロジェクト内のテストケースを一気に実行してカバレッジレポートを出力する。
+  - Package Explorerでプロジェクト[bookMgr]を選択して右クリック→[Coverage As]→[JUnit Test]
+  - EclipseのJUnitビューが表示され、プロジェクト内のテストケースが全て実行される
+
+2.テストケース実行結果確認
+  - 全てのテストが完了するとその結果が表示される
+
+3.カバレッジレポートを確認する
+  - EclipseのCoverageビューが表示される。このビューでカバレッジが確認できる。
+```
+
+EclEmma カバレージリポートの画面イメージ
+![Coverage Image](/images/step9-2-1.png "Coverage Image")
+
+## 2. 正常系のテストコードを書いてみる
+#### 2-1. メイン画面の正常系テストケース作成
+###### 2-1-1. /src/test/java/jp.sample.bookmgr.web.controller.MainControllerTest.java を新規作成
+★★テストコードは、"/src/test" の配下に保存する必要があります。引き続き注意してください。
+
+```
+/src/test/java で右クリック→[New]→[Class]（もしくは[jUnitTestCase]）
+
+---------------
+Java Class 画面
+---------------
+ [Package]: "jp.sample.bookmgr.web.controller"
+ [Name]:    "MainControllerTest" と入力して[Finish]
+---------------
+テストケースのひな形が自動作成される
+```
+
+###### 2-1-2. /src/test/java/jp.sample.bookmgr.web.controller.MainControllerTest.java コーディング
+```java
+package jp.sample.bookmgr.web.controller;
+
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;	
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
+
+/**
+ * Mainコントローラクラスのテストケース
+ * 
+ * @author 長住@NTT-AT
+ * @version 1.0
+ */
+
+// SpringによるJunitテストランナー
+@RunWith(SpringJUnit4ClassRunner.class)
+
+// WebApplicationContext をロードした環境下でテストコードを実行できるおまじない
+@WebAppConfiguration
+
+// Spring定義ファイルの取り込み
+@ContextConfiguration({"classpath:test-context-biz.xml", "classpath:test-context-web.xml"})
+
+public class MainControllerTest {
+
+    /**
+     * WebApplicationContext
+     */
+    @Autowired
+    private WebApplicationContext wac;
+
+    /**
+     * Spring MVCのテストをするためのMockMvcクラス
+     */
+    private MockMvc mockMvc;
+
+    /**
+     * 事前のおまじない
+     * MockMvcクラスインスタンスを取得
+     */
+    @Before
+    public void setup() {
+        // MockMvcクラスインスタンスを取得
+        mockMvc = webAppContextSetup(wac).build();
+    }
+
+    /**
+     * メイン画面表示処理のテスト
+     * 正常系その１
+     * GETリクエストを模倣し返って来たHTTPステータスコードとビューの名前をチェック
+     */
+    @Test
+    public void testMain_normal_1() throws Exception {
         
-    ◆
-    ◆ -- 84行目付近
-    ◆ -- 以下、Spring Security ライブラリの定義を追加
-    ◆
-        <!-- Spring Security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${org.springfsecurity-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${org.springfsecurity-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${org.springfsecurity-version}</version>
-        </dependency>
-    ◆
-    ◆ -- ここまで、Spring Security ライブラリの定義を追加
-    ◆
+        // メイン画面表示のGETリスクエスト発行
+        mockMvc.perform(get("/main"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("main"));
+    }
+}
+```
 
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j-version}</version>
-        </dependency>
+###### 2-1-3. メイン画面の正常系テストケースを実行してみる
+1. テストケース MainControllerTest を[Run as]→[jUnit]で実行し結果を確認してください。
+2. プロジェクト全体を[Run as]→[jUnit]で実行し結果を確認してください。
+3. プロジェクト全体を[Coverage as]→[jUnit]で実行しカバレッジを確認してください。
+
+#### 2-2. 書籍一覧画面の正常系テストケース作成
+###### 2-2-1. /src/test/java/jp.sample.bookmgr.web.controller.BookControllerTest.java を新規作成
+テストケース BookControllerTest クラスを新規作成してください。
+
+###### 2-2-2. /src/test/java/jp.sample.bookmgr.web.controller.BookControllerTest.java コーディング
+```java
+package jp.sample.bookmgr.web.controller;
+
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+
+import java.util.List;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.context.WebApplicationContext;
+
+import jp.sample.bookmgr.biz.domain.Book;
+
+/**
+ * Bookコントローラクラスのテストケース
+ * 
+ * @author 長住@NTT-AT
+ * @version 1.0
+ */
+
+// SpringによるJunitテストランナー
+@RunWith(SpringJUnit4ClassRunner.class)
+
+// WebApplicationContext をロードした環境下でテストコードを実行できるおまじない
+@WebAppConfiguration
+
+// Spring定義ファイルの取り込み
+@ContextConfiguration({"classpath:test-context-biz.xml", "classpath:test-context-web.xml"})
+
+public class BookControllerTest {
+
+    /**
+     * WebApplicationContext
+     */
+    @Autowired
+    private WebApplicationContext wac;
+
+    /**
+     * Spring MVCのテストをするためのMockMvcクラス
+     */
+    private MockMvc mockMvc;
+    
+    /**
+     * 事前のおまじない
+     * MockMvcクラスインスタンスを取得
+     */
+    @Before
+    public void setup() {
+
+        // MockMvcクラスインスタンスを取得
+        mockMvc = webAppContextSetup(wac).build();
+    }
+    
+    /**
+     * 書籍一覧画面表示処理のテスト
+     * 正常系その１
+     * GETリクエストを模倣し返って来たHTTPステータスコードとビューの名前をチェック
+     * DBに規定データが登録されていることを前提にDBから取得したデータが正しいかもチェック
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testListBook_normal_1() throws Exception {
+        
+        // 書籍一覧表示画面のGETリスクエスト発行
+        ResultActions retact = mockMvc.perform(get("/listbook"))
+            .andExpect(status().isOk())            // HTTPステータスコード
+            .andExpect(view().name("listbook"));        // ビュー名
+
+        // DBから読み込んだ書籍情報リストを取り出す
+        MvcResult mvcResult = retact.andReturn();
+        ModelMap modelMap = mvcResult.getModelAndView().getModelMap();
+        List<Book> booksList = (List<Book>)modelMap.get("books");
+        assertThat(booksList, CoreMatchers.is(CoreMatchers.not(CoreMatchers.nullValue())));
+        
+        // DBに ID=1、ISBN="123456789abcdefgh" NAME="JavaScript" PRICE=1200 
+        // のデータが登録されていることが前提のテストケース
+        Book book1 = booksList.get(0);
+        assertThat(book1.getId(), CoreMatchers.is(1));
+        assertThat(book1.getIsbn(), CoreMatchers.is("123456789abcdefgh"));
+        assertThat(book1.getName(), CoreMatchers.is("JavaScript"));
+        assertThat(book1.getPrice(), CoreMatchers.is(1200));
+    }
+}
+```
+
+###### 2-2-3. 書籍一覧画面の正常系テストケースを実行してみる
+1. テストケース BookControllerTest を[Run as]→[jUnit]で実行し結果を確認してください。
+2. プロジェクト全体を[Run as]→[jUnit]で実行し結果を確認してください。
+3. プロジェクト全体を[Coverage as]→[jUnit]で実行しカバレッジを確認してください。
+
+#### 2-3. 書籍登録処理の正常系テストケース作成
+###### 2-3-1. /src/test/java/jp.sample.bookmgr.web.controller.BookControllerTest.java に以下のコードを追加
+```java
 ◆
+◆ 省略
+◆ -- 93行目付近
+◆ ---- ↓ 書籍登録処理の正常系テストケースを追加 ----
+◆
+    /**
+     * 書籍登録処理のテスト
+     * 正常系その１
+     * 書籍フォームからのPOSTリクエストを模倣し実際にデータベースに登録させる。
+     * また、返って来たHTTPステータスコードとビューの名前をチェックする。
+     * @throws Exception
+     */
+    @Test
+    public void testAddBook_normal_1() throws Exception {
+        
+        // テストで登録する書籍情報を設定
+        Book book = new Book();
+        book.setIsbn("TEST-1234567890");
+        book.setName("testAddBookで自動登録しました");
+        book.setPrice(8888);
+
+        // 書籍登録POSTリクエスト発行
+        mockMvc.perform(post("/addbook")
+                .param("isbn", book.getIsbn())
+                .param("name", book.getName())
+                .param("price", new Integer(book.getPrice()).toString())
+                )
+            .andExpect(status().isFound())                // HTTPステータスコード
+            .andExpect(view().name("redirect:result"))    // ビュー名
+            .andExpect(model().hasNoErrors());            // エラーがないこと
+    }
+◆
+◆ ---- ↑ ここまで、書籍登録処理の正常系テストケース ----
 ◆ 以下省略
 ◆
 ```
-★Maven設定ファイル（pom.xml）を更新するとワークスペースのビルドが始まります。ビルドに数分がかかる場合がありますが、終わるまで待っているほうが良いでしょう。
 
-#### 1-2. Spring Security 定義ファイルを用意する
-###### 1-2-1. /src/main/webapp/WEB-INF/spring/application-context-security.xml を新規作成
-/src/main/webapp.WEB-INF/spring/application-context-security.xml を新規作してください。
+###### 2-3-2. 書籍登録処理の正常系テストケースを実行してみる
+1. テストケース BookControllerTest を[Run as]→[jUnit]で実行し結果を確認してください。
+2. プロジェクト全体を[Run as]→[jUnit]で実行し結果を確認してください。
+3. プロジェクト全体を[Coverage as]→[jUnit]で実行しカバレッジを確認してください。
 
-###### 1-2-2. /src/main/webapp/WEB-INF/spring/application-context-security.xml をコーディング
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-            xmlns:sec="http://www.springframework.org/schema/security"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="
-                http://www.springframework.org/schema/beans
-                http://www.springframework.org/schema/beans/spring-beans.xsd 
-                http://www.springframework.org/schema/security
-                http://www.springframework.org/schema/security/spring-security.xsd">
+## 3. 異常系のテストコードを書いてみる
+#### 3-1. 書籍登録処理の正常系テストケース作成
+異常系テストケースは、書籍登録処理（フォームデータのPOST処理）を例にとってコーディング方法を学習します。
 
-    <!-- 以下のURLに対してはSpring Securityの対象外とする-->
-    <sec:http pattern="/loginform" security="none" />
-    <sec:http pattern="/accesserror" security="none" />
-    <sec:http pattern="/resources/**" security="none" />
-    <sec:http pattern="/css/**" security="none" />
-
-    <!-- HTTP-Security  auto-configをtrueにしてデフォルト設定を有効とする -->
-    <sec:http auto-config="true">
-        <!-- アクセス権限がない場合のエラーハンドラ -->
-        <sec:access-denied-handler error-page="/accesserror" />
-        
-        <!-- Cross-Site Request Forgery protection を無効にしておく -->
-        <sec:csrf disabled="true"/>
-
-        <!-- 全てのBookmgrサービスには ROLE_USER 権限を必要とする-->
-        <sec:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
-        
-        <!-- ログイン画面を独自の画面に切り替える -->
-        <sec:form-login login-page="/loginform"
-                    username-parameter="j_username"
-                    password-parameter="j_password"
-                    login-processing-url="/j_spring_security_check"
-                    default-target-url="/main"
-                    authentication-failure-url="/loginform?iserror=1"/>
-        
-        <!-- ログアウト処理の設定 -->
-        <sec:logout logout-url="/logout" logout-success-url="/loginform"
-                invalidate-session="true"/>
-    </sec:http>
-
-    <!-- ユーザ認証の設定 -->
-    <sec:authentication-manager>
-        <sec:authentication-provider>
-            <sec:user-service>
-                <!-- ここでは簡単に認証情報を定義する -->
-                <!-- DBにアクセスして認証することも、LDAPとかを利用することも可能とのこと -->
-                <sec:user name="user1" password="password1" authorities="ROLE_USER" />
-                <sec:user name="user2" password="password2" authorities="ROLE_USER" />
-                <sec:user name="user3" password="password3" authorities="ROLE_USER" />
-            </sec:user-service>
-        </sec:authentication-provider>
-    </sec:authentication-manager>
-
-</beans>
-```
-
-#### 1-3. サーブレット設定ファイル（web.xml）から Spring Security 定義 ファイルをロード
-###### 1-3-1. /src/main/webapp/WEB-INF/web.xml に定義を追加
-```xml
-◆
-◆ 省略
-◆ -- xxx行目付近 -- /WEB-INF/spring/application-context-web.xml を追加
-◆
-    <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            /WEB-INF/spring/application-context-biz.xml
-            /WEB-INF/spring/application-context-security.xml  ◆◆◆←この行追加 ◆◆◆
-        </param-value>
-    </context-param>
-◆
-◆ 省略
-◆ -- xxx行目付近
-◆ ---- 以下の通り、Spring Security フィルタの定義を追加
-◆
-    <!-- Spring Securityフィルタの設定 -->
-    <filter>        
-        <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-◆
-◆ ---- ここまで、Spring Security フィルタの定義を追加
-◆
-</web-app>
-```
-
-#### 1-4. ログインフォーム画面とアクセス不可エラー画面を用意する
-###### 1-4-1. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java
-ログインフォーム画面とログイン処理のコントロールメソッドをMainController に追加します。
-```java
-◆
-◆ import 文省略
-◆
-@Controller
-public class MainController {
-    
-    /**
-     * ロガー
-     */
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-    
-  ◆
-  ◆ -- xxx行目付近
-  ◆ ---- ↓ ログインフォーム画面コントローラを追加
-  ◆
-    /**
-     * ログインフォーム画面コントローラ
-     *    
-     * @return 画面JSP名
-     */
-    @RequestMapping(value = "/loginform", method = RequestMethod.GET)
-    public String loginForm() {
-        // 画面表示にloginform.jsp を呼び出す
-        return "loginform";
-    }
-  ◆
-  ◆ ---- ↑ ここまで、ログインフォーム画面コントローラを追加
-  ◆ ---- ↓ アクセス不可エラー画面コントローラを追加
-  ◆
-    /**
-     * アクセス不可エラー画面コントローラ
-     *
-     * @return 画面JSP名
-     */
-    @RequestMapping(value = "/accesserror", method = RequestMethod.GET)
-    public String accessError() {
-        return "error/accesserror";
-    }
-  ◆
-  ◆ ---- ↑ ここまで、ログインエラー画面コントローラを追加
-  ◆
-
-    /**
-     * 書籍管理メイン画面コントローラ
-     * 
-     * @return 画面JSP名
-     */
-    @RequestMapping(value = "/main", method = RequestMethod.GET)
-    public String main() throws Exception {
-        
-        logger.debug("main() start");
-        
-        // 画面表示に main.jsp を呼び出す
-        return "main";
-    }
-}
-```
-
-###### 1-4-2. /src/main/webapp/WEB-INF/views/loginform.jsp
-ログインフォーム画面View（loginform.jsp）新規作成
-
-```jsp
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="css/bookmgr.css" />
-<title>書籍管理 ログイン画面</title>
-</head>
-<body>
-<h1>書籍管理 ログイン画面</h1>
-
-<hr />
-
-<form name="login_form" action="j_spring_security_check" method="POST">
-<table>
- <tr>
-  <th>ログインID</th>
-  <td><input type="text" id="j_username" name="j_username"/></td>
- </tr>
- <tr>
-  <th>パスワード</th>
-  <td><input type="password" id="j_password" name="j_password"/></td>
- </tr>
-</table>
-<br>
- <input type="submit" value="ログイン" />
-</form>
-
-<c:if test="${param.iserror=='1'}">
-<p style="color:red">ログイン認証に失敗しました。</p>
-</c:if>
-
-<hr />
-</body>
-</html>
-```
-
-###### 1-4-3. /src/main/webapp/WEB-INF/views/error/accesserror.jsp
-アクセス不可エラー画面View（error/accesserror.jsp）新規作成
-```jsp
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="css/bookmgr.css" />
-<title>アクセス不可エラー画面</title>
-</head>
-<body>
-<h1>アクセス不可エラー</h1>
-<hr />
-
-<p style="color:red">アクセス権限がありません。</p>
-
-<hr />
-<a href="main">書籍管理メイン画面</a> 
-</body>
-</html>
-```
-
-###### 1-4-4. /src/main/webapp/WEB-INF/views/main.jsp
-main 画面View（main.jsp）にログアウトのリンクを追加
-
-```jsp
-◆
-◆
-◆ 省略
-◆
-<a href="listbook">書籍一覧画面</a>
-<br />
-<a href="addbookform">書籍登録画面</a>
-<br />                                ◆◆◆ -- 17行目付近 -- 左記を追加 ◆◆◆
-<a href="logout">ログアウト</a>       ◆◆◆ -- 18行目付近 -- 左記を追加 ◆◆◆
-</body>
-```
-
-#### 1-5. 画面表示テスト
-###### 1-5-1. ログイン画面
-1) プログラムを起動すると、ログイン画面が表示されることを確認してください。
-
-![login1 Image](/images/step10-1.png "login1 Image")
-
-2) ログインIDに user1／パスワードに password1 を入力るとHome画面に遷移することを確認してください。  
-同様に、user2/password2  user3/password3 でもログインできるはずです。
-
-![login2 Image](/images/step10-2.png "login2 Image")
-
-3) 正常にログインしたら main画面が表示されますが、main画面にある [ログアウト]リンクをクリックするとログイン画面に戻ることを確認してください。
-
-![main Image](/images/step10-3.png "main Image")
-
-![login3 Image](/images/step10-4.png "login3 Image")
-
-このとき、既にログアウト処理が走っていますので、戻るボタンなどで main 画面に戻ることはできません。
-
-4) 不正な ID/Password を入力した場合は、エラーメッセージが表示されたログイン画面に戻ることを確認してください。
-
-![login4 Image](/images/step10-5.png "login4 Image")
-
-5) ログインしていない状態で、アドレスバーからダイレクトにメイン画面や書籍一覧画面のURLを入力してみます。  
-すると、その画面に遷移することなく、ログイン画面が表示することを確認してください。
-
-![login5 Image](/images/step10-6.png "login5 Image")
-
-この状態でログインすると、ダイレクトに指定したURLに対する画面に遷移するはずです。
-
-![bookList Image](/images/step10-7.png "bookList Image")
-
-## 2. トランザクション管理を実装する
-#### 2-1. トランザクションマネージャを利用できるようにする
-###### 2-1-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml
-Spring定義ファイルにトランザクションマネージャの定義を追加する
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx"             ◆◆◆ ←この行を追加 ◆◆◆
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd    ◆◆◆ ←最後の">を削除 ◆◆◆
-        http://www.springframework.org/schema/tx                    ◆◆◆ ←この行を追加 ◆◆◆
-        http://www.springframework.org/schema/tx/spring-tx.xsd">    ◆◆◆ ←この行を追加 ◆◆◆
-        
-    <!-- Defines shared resources visible to all other web components -->
-    <context:component-scan base-package="jp.sample.bookmgr.biz" />
-    
-    <!-- Enables the Spring AOP -->
-    <aop:aspectj-autoproxy />
-    
-    <!-- データソース用のリソース -->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:/jdbc.properties" />
-    </bean>
-    
-    <!-- データソース設定 (for tomcat dbcp) -->
-    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driverClassName}" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
-    </bean>
-    
-    <!-- JDBC Template Bean -->
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <!-- JDBC Named Template Bean -->
-    <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-        <constructor-arg ref="dataSource" />
-    </bean>
-    
-    <!-- Message Source -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:/messages" />
-    </bean>
-    <!-- Validator -->
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-        <property name="validationMessageSource" ref="messageSource" />
-    </bean>
-
-◆
-◆ -- XX行目付近
-◆ -- ↓トランザクションマネージャの定義を追加
-◆
-    <!-- Transaction Manager -->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    <!-- アノテーションベースのトランザクションを有効にする -->
-    <tx:annotation-driven />
-◆
-◆ -- ↑ここまで、トランザクションマネージャの定義を追加
-◆
-
-</beans>
-```
-
-#### 2-2. トランザクション管理を実装する
-###### 2-2-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java
-書籍一覧サービスに readOnly モードでトランザクションを設定します。  
-書籍一覧サービス「ListBookServiceImple」はDB更新がないため、トランザクションモードは readOnly で設定します。
-
+###### 3-1-1. /src/test/java/jp.sample.bookmgr.web.controller.BookControllerTest.java に異常系コードを追加
 ```java
 ◆
 ◆ 省略
-◆ -- 17行目付近
+◆ -- 120行目付近
+◆ ---- ↓ 書籍登録処理の異常系テストケースを追加 ----
 ◆
-@Service // サービスクラスとしてDI可能というアノテーションを宣言
-public class ListBookServiceImple implements ListBookService {
     /**
-     *  書籍一覧取得DAO
+     * 書籍登録処理のテスト
+     * 異常系その１
+     * 書籍フォームからのPOSTリクエストを模倣するがバリデーションエラーとなるケース。
+     * 返って来たHTTPステータスコードとビューの名前をチェックする。
+     * @throws Exception
      */
-    @Autowired        // ListBookDaoオブジェクトをインジェクション
-    ListBookDao listBookDao;
+    @Test
+    public void testAddBook_abnormal_1() throws Exception {
+        
+        // テストで登録する書籍情報を設定
+        Book book = new Book();
+        book.setIsbn("1234");    ★★★ --- @Size 違反 ★★★
+        book.setName("testAddBookで自動登録しました");
+        book.setPrice(8888);
 
-    /**
-     * 書籍一覧取得サービス
-     * @return    書籍一覧情報
-     */ 
-    @Override
-    @Transactional(readOnly=true)     ◆◆◆ ← この行を追加 ◆◆◆
-    public List<Book> getBookList() throws Exception {
-        // 書籍一覧を取得
-        return listBookDao.getBookList();
+        // 書籍登録POSTリクエスト発行
+        mockMvc.perform(post("/addbook")
+                .param("isbn", book.getIsbn())
+                .param("name", book.getName())
+                .param("price", new Integer(book.getPrice()).toString())
+                )
+            .andExpect(status().isOk())                    // HTTPステータスコード
+            .andExpect(view().name("addbookform"))         // ビュー名
+            .andExpect(model().hasErrors())                // エラーが発生していること
+            .andExpect(model().errorCount(1))              // エラーの数
+            .andExpect(model().attributeExists("book"))    // modelAtribute名
+            .andExpect(model().attributeHasFieldErrors("book", "isbn"))  // エラーフィールド名
+            ;
     }
-}
+◆
+◆ ---- ↑ ここまで、書籍登録処理の異常系テストケース ----
+◆ 以下省略
+◆
 ```
 
-###### 2-2-2. /src/main/java/jp.sample.bookmgr.biz.service.AddBookServiceImple.java
-書籍登録サービスに、ReadCommitted モードでトランザクションを設定します。  
-書籍追加サービス「AddBookServiceImple」はDB更新系なので、ReadCommitted モードでトランザクションを設定します。
-
-```java
-◆
-◆ 省略
-◆ -- 15行目付近
-◆
-@Service    // サービスクラスとしてDI可能というアノテーションを宣言
-public class AddBookServiceImple implements AddBookService {
-    /**
-     * データベースに書籍登録を行うDAOクラス
-     */
-    @Autowired        // インジェクション
-    private AddBookDao addBookDao;
-    
-    /**
-     * 書籍登録サービスを実行する
-     * 
-     * @param Book 書籍情報
-     */ 
-    @Override
-  ◆
-  ◆ -- xx 行目
-  ◆ -- ↓更新系のトランザクション制御を設定する
-  ◆
-    @Transactional(
-        propagation=Propagation.REQUIRED,
-        isolation=Isolation.READ_COMMITTED,
-        timeout=10,
-        readOnly=false,
-        rollbackFor=RuntimeException.class)
-  ◆
-  ◆ -- ↑ここまで、更新系のトランザクション制御を設定する
-  ◆
-    public void addBook(Book book) throws Exception {
-        // 書籍登録を行うDAOクラスを使用して書籍情報を永続化する
-        addBookDao.addBook(book);
-    }
-}
-```
-
-#### 2-3. トランザクション制御のテスト
-★コードを追加しないとできないため講師の方でデモを行います。
+###### 3-1-2. 書籍登録処理の異常系テストケースを実行してみる
+1. テストケース BookControllerTest を[Run as]→[jUnit]で実行し結果を確認してください。
+2. プロジェクト全体を[Run as]→[jUnit]で実行し結果を確認してください。
+3. プロジェクト全体を[Coverage as]→[jUnit]で実行しカバレッジを確認してください。

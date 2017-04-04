@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP03
+step:   "STEP03"
+title:  "DIによる（えせ）書籍一覧画面"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-### STEP 03 / DIによる（えせ）書籍一覧画面
-***
-
 ## 1. 書籍情報を保持するドメインクラスを作成する
 #### 1-1. 書籍情報ドメインクラス Book.java 作成
 ###### 1-1-1. /src/main/java/jp.sample.bookmgr.biz.domain.Book.java 作成

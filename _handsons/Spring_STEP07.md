@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP07
+step:   "STEP07"
+title:  "例外をハンドリングする"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-### STEP 07 / 例外をハンドリングする
-***
-
 ## 1. 例外発生時にきちんとハンドリングする
 #### 1-1. Spring定義ファイルで例外ハンドラを設定する
 ここではアプリケーション全体で統一した例外ハンドリング方法について学習します。  

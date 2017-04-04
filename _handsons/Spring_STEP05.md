@@ -1,13 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP05
+step:   "STEP05"
+title:  "Spring JDBC による書籍テーブル更新"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-### STEP 05 / Spring JDBC による書籍テーブル更新
-***
-
 ## 1. 書籍登録フォーム画面を実装する
 #### 1-1. 書籍登録フォーム画面コントローラをきちんと実装
 ###### 1-1-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java

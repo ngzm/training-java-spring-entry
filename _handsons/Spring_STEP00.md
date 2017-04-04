@@ -1,14 +1,9 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP00
+step:   "STEP00"
+title:  "本資料の記述方法について"
 date:   2017-04-03
 ---
-
-# Spring Framework 入門
-## STEP ZERO
-本書の記述方法についての解説
-***
-
 ## 1. 作業手順の記述例
 作業手順は以下の感じで記述します。
 

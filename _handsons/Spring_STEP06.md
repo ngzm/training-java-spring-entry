@@ -1,6 +1,7 @@
 ---
 layout: handson
-title:  Spring ENTRY STEP06
+step:   "STEP06"
+title:  "日本語文字化けとかの対策 ＋ Validation Check の実装"
 date:   2017-04-03
 ---
 

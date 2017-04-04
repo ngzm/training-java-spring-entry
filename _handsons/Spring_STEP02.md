@@ -1,9 +1,9 @@
 ---
 layout: handson
-title:  "STEP 02 / Spring MVC による画面遷移"
+step:   "STEP02"
+title:  "Spring MVC による画面遷移"
 date:   2017-04-03
 ---
-
 ## 1. Hello World 画面からメイン画面への遷移を実装してみる
 #### 1-1. hello.jsp にメイン画面へのリンクを追加
 ###### 1-1-1. /src/main/webapp/WEB-INF/views/hello.jsp 修正
