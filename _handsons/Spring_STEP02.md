@@ -4,9 +4,11 @@ step:   "STEP02"
 title:  "Spring MVC による画面遷移"
 date:   2017-04-03
 ---
-## 1. Hello World 画面からメイン画面への遷移を実装してみる
-#### 1-1. hello.jsp にメイン画面へのリンクを追加
-###### 1-1-1. /src/main/webapp/WEB-INF/views/hello.jsp 修正
+<h2 class="handson">1. Hello World 画面からメイン画面へ遷移する</h2>
+
+### 1-1. hello.jsp にメイン画面へのリンクを追加
+#### 1-1-1. /src/main/webapp/WEB-INF/views/hello.jsp 修正
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -20,21 +22,17 @@ date:   2017-04-03
 <h1>Hello Spring</h1>  
 きちんとみれましたでしょうか？
 
-◆
-◆ ---- ↓メイン画面へのリンクを追加
-◆
 <hr>
+<!-- メイン画面へのリンク -->
 <a href="main">書籍管理メイン画面</a> 
-◆
-◆ ---- ↑ここまで、メイン画面へのリンクを追加
-◆
 
 </body>
 </html>
 ```
 
-#### 1-2. メイン画面コントローラ作成
-###### 1-2-1. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java 作成
+### 1-2. メイン画面コントローラ作成
+#### 1-2-1. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[Class]
   
@@ -45,7 +43,8 @@ Name: "MainController" と入力して[Finish]
 ---------------
 ```
 
-###### 1-2-2. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java コーディング
+#### 1-2-2. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java コーディング
+
 ```java
 package jp.sample.bookmgr.web.controller;
 
@@ -85,8 +84,9 @@ public class MainController {
 }
 ```
 
-#### 1-3. メイン画面ビュー作成
-###### 1-3-1. /src/main/webapp/WEB-INF/view/main.jsp 作成
+### 1-3. メイン画面ビュー作成
+#### 1-3-1. /src/main/webapp/WEB-INF/view/main.jsp 作成
+
 ```
 /src/main/webapp/WEB-INF/views で右クリック→[New]→[JSP File]
 
@@ -96,7 +96,8 @@ File Name: "main.jsp" と入力して[Finish]
 ---------------
 ```
 
-###### 1-3-2. /src/main/webapp/WEB-INF/view/main.jsp コーディング
+##### 1-3-2. /src/main/webapp/WEB-INF/view/main.jsp コーディング
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -119,16 +120,19 @@ File Name: "main.jsp" と入力して[Finish]
 </html>
 ```
 
-#### 1-4. 画面表示テスト
+### 1-4. 画面表示テスト
+
 プログラムを起動して、うまくコードが実行されるか、うまく画面が表示されるかを確認してください。
 
-![Hello to Main Image](/images/step2-1.png "Hello to Main Image")
+![Hello to Main Image]({{ site.baseurl }}/images/step2-1.png "Hello to Main Image")
 
 書籍一覧画面や書籍登録画面はまだ実装していないため、アクセスしても404エラーとなります。
 
-## 2. メイン画面から書籍一覧と書籍登録フォーム画面に遷移してみる
-#### 2-1. 書籍一覧画面コントローラ作成
-###### 2-1-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java 作成
+<h2 class="handson">2. メイン画面から書籍一覧と書籍登録フォーム画面に遷移する</h2>
+
+### 2-1. 書籍一覧画面コントローラ作成
+#### 2-1-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[Class]
 
@@ -139,7 +143,8 @@ Name: "BookController" と入力して[Finish]
 ---------------
 ```
 
-###### 2-1-2. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java コーディング
+#### 2-1-2. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java コーディング
+
 ```java
 package jp.sample.bookmgr.web.controller;
 
@@ -155,7 +160,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author 長住@NTT-AT
  * @version 1.0
  */
-@Controller // ”コントローラとしてDI可能" というアノテーションを宣言
+@Controller // "コントローラとしてDI可能" というアノテーションを宣言
 public class BookController {
 
   /**
@@ -179,8 +184,9 @@ public class BookController {
 }
 ```
 
-#### 2-2. 書籍一覧画面ビュー作成
-###### 2-2-1. /src/main/webapp/WEB-INF/views/listbook.jsp 作成
+### 2-2. 書籍一覧画面ビュー作成
+#### 2-2-1. /src/main/webapp/WEB-INF/views/listbook.jsp 作成
+
 ```
 /src/main/webapp/WEB-INF/views で右クリック→[New]→[JSP File]
 
@@ -190,7 +196,8 @@ File Name: "listbook.jsp" と入力して[Finish]
 ---------------
 ```
 
-###### 2-2-2. /src/main/webapp/WEB-INF/views/listbook.jsp コーディング
+#### 2-2-2. /src/main/webapp/WEB-INF/views/listbook.jsp コーディング
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -204,9 +211,7 @@ File Name: "listbook.jsp" と入力して[Finish]
 
 <h1>書籍一覧画面</h1>
 
-◆
-◆ 中身はまだ実装できないので、とりあえず工事中と表示する
-◆
+<!-- @@@@中身はまだ実装できないのでとりあえず工事中と表示する@@@@ -->
 <p>
 工事中！！
 </p>
@@ -218,13 +223,13 @@ File Name: "listbook.jsp" と入力して[Finish]
 </html>
 ```
 
-#### 2-3. 書籍登録フォーム画面コントローラ作成
-###### 2-3-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java
+### 2-3. 書籍登録フォーム画面コントローラ作成
+#### 2-3-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java
+
 ```java
-◆ 省略
-◆ -- 34行目付近 (listBookメソッドの次)
-◆ ---- ↓書籍登録フォーム画面コントローラのコードを追加
-◆
+// @@@@ 34行目付近 @@@@
+// @@@@ 書籍登録フォーム画面コントローラのコードを追加
+
   /**
    * 書籍登録フォーム画面コントローラ
    * 
@@ -238,13 +243,14 @@ File Name: "listbook.jsp" と入力して[Finish]
     // 画面表示に addbookform.jsp を呼び出す
     return "addbookform";
   }
-◆
-◆ ---- ↑ここまで、書籍登録フォーム画面コントローラのコードを追加
-◆ 以下省略
+
+// @@@@ ここまで @@@@
+// @@@@ 以下省略 @@@@
 ```
 
-#### 2-4. 書籍登録フォーム画面ビュー作成
-###### 2-4-1. /src/main/webapp/WEB-INF/views/addbookform.jsp 新規作成
+### 2-4. 書籍登録フォーム画面ビュー作成
+#### 2-4-1. /src/main/webapp/WEB-INF/views/addbookform.jsp 新規作成
+
 ```
 /src/main/webapp/WEB-INF/views で右クリック→[New]→[JSP File]
 
@@ -254,7 +260,8 @@ File Name: "addbookform.jsp" と入力して[Finish]
 ---------------
 ```
 
-###### 2-4-2. /src/main/webapp/WEB-INF/views/addbookform.jsp コーディング
+#### 2-4-2. /src/main/webapp/WEB-INF/views/addbookform.jsp コーディング
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -268,6 +275,7 @@ File Name: "addbookform.jsp" と入力して[Finish]
 
 <h1>書籍登録フォーム画面</h1>
 
+<!-- @@@@中身はまだ実装できないのでとりあえず工事中と表示する@@@@ -->
 <p>
 工事中！！
 </p>
@@ -279,14 +287,17 @@ File Name: "addbookform.jsp" と入力して[Finish]
 </html>
 ```
 
-#### 2-5. 画面表示テスト
+### 2-5. 画面表示テスト
+
 プログラムを起動して、うまくコードが実行されるか、うまく画面が表示されるかを確認してください。
 
-![Main to BookList and BookAddForm Image](/images/step2-2.png "Main to BookList and BookAddForm Image")
+![Main to BookList and BookAddForm Image]({{ site.baseurl }}/images/step2-2.png "Main to BookList and BookAddForm Image")
 
-## 3. スタイルシート準備
-#### 3-1. スタイルシート（CSSファイル）作成
-###### 3-1-1. /src/main/webapp/css フォルダ新規作成
+<h2 class="handson">3. スタイルシート作成</h2>
+
+### 3-1. スタイルシート（CSSファイル）作成
+#### 3-1-1. /src/main/webapp/css フォルダ新規作成
+
 ```
 /src/main/webapp で右クリック→[New]→[Folder]
 
@@ -296,7 +307,7 @@ Folder Name: "css" と入力して[Finish]
 ---------------
 ```
 
-###### 3-1-2. /src/main/webapp/css/bookmgr.css ファイル新規作成
+#### 3-1-2. /src/main/webapp/css/bookmgr.css ファイル新規作成
 ```
 /src/main/webapp/css で右クリック→[New]→[File]
 
@@ -306,7 +317,8 @@ File Name: "bookmgr.css" と入力して[Finish]
 ---------------
 ```
 
-###### 3-1-3. /src/main/webapp/css/bookmgr.css コーディング
+#### 3-1-3. /src/main/webapp/css/bookmgr.css コーディング
+
 ```css
 h1 {
     color: #3399CC;
@@ -321,22 +333,25 @@ td {
 }
 ```
 
-#### 3-2. Spring定義ファイルの修正
-###### 3-2-1. /src/main/webapp/WEB-INF/spring/application-context-web.xml 追記
+### 3-2. Spring定義ファイルの修正
+#### 3-2-1. /src/main/webapp/WEB-INF/spring/application-context-web.xml 追記
+
 ```xml
-  ◆ 省略
-  ◆ -- 20行目付近
-  ◆ ---- ↓cssファイル格納ディレクトリを直接参照できるように設定を追加
-  ◆
+<!--
+  @@@@ 20行目付近 @@@@
+  @@@@ CSSファイルを格納するディレクトリを直接参照できるように設定を追加
+  @@@@ -->
+
     <!-- Resource mappings -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
     <mvc:resources mapping="/css/**" location="/css/" />  ◆◆◆←この行を追加
-  ◆
-  ◆ 以下省略
+
+<!-- @@@@ 以下省略 @@@@ -->
 ```
 
 #### 3-3. 画面表示テスト
-プログラム起動。メイン画面遷移するとタイトル文字が青色（水色？）に変わっていることを確認してください。
 
-![Main Image](/images/step2-3.png "Main Image")
+プログラム起動し、メイン画面遷移するとタイトル文字が青色（水色）に変わっていることを確認
+
+![Main Image]({{ site.baseurl }}/images/step2-3.png "Main Image")
 

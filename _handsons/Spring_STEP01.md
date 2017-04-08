@@ -4,43 +4,42 @@ step:   "STEP01"
 title:  "開発環境構築 & Hello World"
 date:   2017-04-02
 ---
-## 1. 開発環境構築に必要なソフトウェア
-#### 1-1. ソフトウェア一覧
-| # | カテゴリ | 製品名 | バージョン | 備考 |
-|:--:|:--|:--|:--|:--|
-| 1 | Java | Java SE Development Kit | 1.8.0_102 | JSDK 1.8系の最新版でOK |
-| 2 | 開発環境 | Eclipse IDE for Java EE Development | 4.6.1 (Neon) |  Eclipse Java EE 4.6系の最新版でOK |
-| 3 | 開発環境 | Spring IDE 3.8.2 RELEASE | 3.8.2 RELEASE | - |
-| 4 | 開発環境 | junit | 4.1.2 | - |
-| 5 | Spring | Spring Framework | 4.2.8.RELEASE | Spring4.2系であれば恐らく大丈夫 |
-| 6 | Web/Appサーバ | Tomcat | 8.5.5 | Tomcat 8.5 系の最新版でOK |
-| 7 | DBMS | PostgreSQL | 9.6.0 | PostgreSQL 9.6系の最新版でOK |
+<h2 class="handson">1. 開発環境に必要なソフトウェア</h2>
+
+### 1-1. ソフトウェア一覧
+
+| # | カテゴリ | 製品名 | バージョン |
+|:--:|:--|:--|:--|
+| 1 | Java | [Java SE Development Kit][jsdk] | 1.8.* |
+| 2 | 開発環境 | [Eclipse IDE for Java EE Development][eclipse] | 4.6.* (Neon) |
+| 3 | 開発環境 | [Spring IDE][springide] | 3.8.2 RELEASE |
+| 4 | 開発環境 | [junit][junit] | 4.1.2 |
+| 5 | Spring | [Spring Framework][springfw] | 4.2.8.RELEASE |
+| 6 | Web/Appサーバ | [Tomcat][tomcat] | 8.5.* |
+| 7 | DBMS | [PostgreSQL][postgres] | 9.6.* |
 
 **(参考)** 本講習における Spring Framework を始めとした各種ライブラリの構成は「Spring IO 2.0.8-Release」に準拠しています。
 
-#### 1-2. ダウンロード先
-個別にダウンロードする必要があるものだけを記載します。
+[jsdk]: http://www.oracle.com/technetwork/java/javase/downloads/index.html "jSDK"
+[eclipse]: https://www.eclipse.org/downloads/ "Eclipse"
+[springide]: https://spring.io/tools/sts "Spring IDE"
+[junit]: http://junit.org/junit4 "JUnit"
+[springfw]: https://projects.spring.io/spring-framework/ "spring framework"
+[tomcat]: http://tomcat.apache.org/download-80.cgi "tomcat"
+[postgres]: http://www.postgresql.org/download/ "postreSQL"
 
-| # | 製品名 | URL |
-|:--:|:--|:--|
-| 1 | Java SE Development Kit | http://www.oracle.com/technetwork/java/javase/downloads/index.html |
-| 2 | Eclipse IDE for Java EE Development | https://www.eclipse.org/downloads/ |
-| 3 | Tomcat | http://tomcat.apache.org/download-80.cgi |
-| 4 | PostgreSQL | http://www.postgresql.org/download/ |
+### 1-2. その他要件
+開発に必要なパッケージ・ライブラリは、インターネットからダウンロードするため開発環境はインターネットに接続している必須があります。  
 
-#### 1-3. その他要件
-★★開発環境はインターネットに接続している必須があります。  
-開発に必要なパッケージ・ライブラリは、インターネットからダウンロードするためです。
+<h2 class="handson">2. 開発環境環境構築</h2>
 
-## 2. 開発環境構築
-#### 2-1. JDKセットアップ
-###### 2-1-1. インストール
-```
-次サイトからダウンロード ⇒ http://www.oracle.com/technetwork/java/javase/downloads/index.html
-JDKを選択し普通にインストール
-```
+### 2-1. JDKセットアップ
+#### 2-1-1. インストール
 
-###### 2-1-2. 環境変数の設定後，コマンドプロンプトでJavaが実行できるか確認
+[JDKをダウンロード][jsdk]  普通にインストール
+
+#### 2-1-2. 環境変数の設定後，コマンドプロンプトでJavaが実行できるか確認
+
 ```
 $ java -version
   java version "1.8.0_102"
@@ -48,71 +47,83 @@ $ java -version
   Java HotSpot(TM) Client VM (build 25.102-b14, mixed mode)
 ```
 
-#### 2-2. Eclipseセットアップ
-###### 2-2-1. Eclipseインストール
+### 2-2. Eclipseセットアップ
+#### 2-2-1. Eclipseインストール
+
+[Eclipse 4.6.1(Neon)][eclipse] をダウンロードし次の手順でインストール
+
 ```
-インストールフォルダを「C:/DEV/eclipse」とする（本当はどこでも良い）
+1.ダウンロードファイルを解凍 -->「eclipse」フォルダが解凍される
 
-1.Eclipse 4.6.1(Neon)をダウンロード ⇒ https://www.eclipse.org/downloads/
-  ダウンロードした「eclipse」フォルダを以下に移動
-  C:/DEV/eclipse
+2.上記「eclipse」フォルダを「C:/DEV/eclipse」に移動
 
-2.Eclipseが起動することを確認
-  C:/DEV/eclipse/eclipse.exe
+3.「C:/DEV/eclipse/eclipse.exe」を起動
 
-3.起動時にworkspaceを指定する画面がでてくるので「C:/DEV/workspace」を指定する（本当はどこでもOK）
-  C:/DEV/workspace ----> Eclipseのプロジェクトフォルダ
+4.起動時にworkspaceを指定する画面がでてくるので「C:/DEV/workspace」を指定
+
+＊今回は、インストールフォルダを「C:/DEV/eclipse」とする（本当はどこでも良い）  
+＊Eclipse WorkSpace フォルダを「C:/DEV/workspace」とする（本当はどこでも良い）
 ```
 
-###### 2-2-2. Eclipse環境設定（基本編）
+#### 2-2-2. Eclipse環境設定（基本編）
+
 ```
 a.Default のJRE の設定確認
-  [Window]→[Preference]→[Java]→[Installed JREs]
+  [Preference]→[Java]→[Installed JREs]
 
 b.Java Compiler の設定確認
-  [Window]→[Preference]→[Java]→[Compiler]→[Compiler compliance level] : "1.8"
+  [Preference]→[Java]→[Compiler]→[Compiler compliance level]
+    : "1.8"
 
 c.Default の文字コードをUTF-8 に変更
-  [Window]→[Preference]→[General]→[Workspace]→[Text file Encoding]→[Other]: "UTF-8"
+  [Preference]→[General]→[Workspace]→[Text file Encoding]→[Other]
+    : "UTF-8"
 
 d.行番号の表示
-  [Window]→[Preference]→[general]→[Editors]→[Text Editor]→[Show line numbers]をチェック 
+  [Preference]→[general]→[Editors]→[Text Editor]→[Show line numbers]
+    : チェックする（有効）
 
 e.ホワイトスペースの表示
-  [Window]→[Preference]→[general]→[Editors]→[Text Editor]→[Show whitespace characers]をチェック 
+  [Preference]→[general]→[Editors]→[Text Editor]→[Show whitespace characers]
+    : チェックする（有効）
 
-f.AT-NET Proxy の設定（AT-NETの場合のみ）
-  [Window]→[Preferences]→[General]→[Network Connections]
-  ・ Active Providerを "Manual" に変更
-  ・ HTTP、HTTPS の Host、Port、User、Passwordに、AT-ProxyとAT-ID、Password を設定 (SOCKSは設定しない)
+f.Proxy の設定（必要に応じて）
+  [Preferences]→[General]→[Network Connections]
 
 g.日本語化（必要に応じて、今回は英語のまま行います）
 ```
 
-###### 2-2-3.	Eclispe環境設定 CSS、HTML、JSPファイル文字コード設定変更
+#### 2-2-3.	Eclispe環境設定 CSS、HTML、JSPファイル文字コード設定変更
+
 ```
-a.CSS ファイルの Default の文字コードが UTF-8 であることを確認、もし違っていれば UTF-8 に変更
-  [Window]→[Preference]→[Web]→[CSS Files]→[Creating files]→[Encoding]: "ISO 10646/Unicoede(UTF-8)"
+h.CSS ファイルの Default の文字コードが UTF-8 であることを確認、違っていれば UTF-8 に変更
+  [Preference]→[Web]→[CSS Files]→[Creating files]→[Encoding]
+    : "ISO 10646/Unicoede(UTF-8)"
 
-b.HTML ファイルの Default の文字コードが UTF-8 であることを確認、もし違っていれば UTF-8 に変更
-  [Window]→[Preference]→[Web]→[HTML Files]→[Creating files]→[Encoding]: "ISO 10646/Unicoede(UTF-8)"
+i.HTML ファイルの Default の文字コードが UTF-8 であることを確認、違っていれば UTF-8 に変更
+  [Preference]→[Web]→[HTML Files]→[Creating files]→[Encoding]
+    : "ISO 10646/Unicoede(UTF-8)"
 
-c.JSP ファイルの Default の文字コードをUTF-8 に変更
-  [Window]→[Preference]→[Web]→[SP Files]→[Creating files]→[Encoding]: "ISO 10646/Unicoede(UTF-8)"
+j.JSP ファイルの Default の文字コードをUTF-8 に変更
+  [Preference]→[Web]→[SP Files]→[Creating files]→[Encoding]
+    : "ISO 10646/Unicoede(UTF-8)"
 ```
 
-###### 2-2-4. JSPファイルのテンプレートを HTML5 にする
+#### 2-2-4. JSPファイルのテンプレートを HTML5 にする
+
 ```
-1.[Window]→[Preference]→[Web]→[JSP Files]→[Editor]→[Templates]→[New JSP File(html)]をダブルクリック
+k.[Preference]→[Web]→[JSP Files]→[Editor]→[Templates]→[New JSP File(html)]
+```
 
-2.Pattern を以下のように編集（◆◆◆の行が変更対象です）
+Pattern を以下のように編集（@@@@ の行が変更対象）
 
----
-<%@ page language="java" contentType="text/html; charset=${encoding}" pageEncoding="${encoding}"%> ◆◆◆
-<!DOCTYPE html> ◆◆◆
+```jsp
+<% @page language="java" contentType="text/html;
+    charset=${encoding}" pageEncoding="${encoding}"%> <!-- @@@@変更する -->
+<!DOCTYPE html> <!-- @@@@変更する -->
 <html>
 <head>
-<meta charset="${encoding}"> ◆◆◆
+<meta charset="${encoding}">  <!-- @@@@変更する -->
 <title>Insert title here</title>
 </head>
 <body>
@@ -121,69 +132,42 @@ ${cursor}
 </html>
 ```
 
-###### 2-2-5. Maven Proxy設定（AT-NETのような Proxy 配下のネットワークでは本手順が必要）
-```
-1.[Window]→[Preference]→[Maven]→[User Settings]
-   "[UserDirectory]/.m2/settings.xml"を設定
+### 2-3. Spring IDE（Eclipseプラグイン）インストール
 
-2.エクスプローラなどから "[UserDirectory]/.m2/settings.xml" ファイルを作成
-
-3."[UserDirectory]/.m2/settings.xml" に以下の記述を追加
-  ---
-  <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-    http://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <proxies>  
-      <proxy>
-        <active>true</active>
-        <protocol>http</protocol>
-        <host>atproxy.bb.ntt-at.co.jp</host>
-        <port>3128</port>
-        <username>[XXXX 自分のユーザ XXXX]</username>
-        <password>[XXXX 自分のパスワード XXXX]</password>
-        <nonProxyHosts></nonProxyHosts>
-      </proxy>
-    </proxies>
-  </settings>
-  ---
-```
-**(参考)** settings.xml：https://maven.apache.org/settings.html
-
-#### 2-3. Spring IDE（Eclipseプラグイン）インストール
 ```
 1.[Help]→[Eclipse MarketPlace]画面を表示
 
-2.検索画面で[Spring]を検索して、以下のツールをインストール
-  -----------------
-  Spring IDE 3.8.2.RELEASE
-  -----------------
+2.検索画面で[Spring]を検索して、「Spring IDE 4.8.2.RELEASE」をインストール
 
-プラグインはデフォルト選択状態のままでインストールする。インストール後Eclipseが再起動する。
+＊プラグインはデフォルト選択状態でOK
+＊インストール後Eclipse再起動
 ```
 
-#### 2-4. Tomcat Local Server セットアップ 
-###### 2-4-1. Tomcatインストール 
-```
-インストールフォルダを「C:/DEV/tomcat」とする（本当はどこでも良い）
+### 2-4. Tomcat Local Server セットアップ 
+#### 2-4-1. Tomcatインストール 
 
-1.ダウンロード ⇒ http://tomcat.apache.org/download-80.cgi
-  Windowsなら、32-bit Windows zip または 64-bit Windows zip を選択。
+[Tomcatをダウンロード][tomcat]  次の手順でインストール
 
-2.ダウンロードして以下に解凍
-  C:/DEV/tomcat/
+```
+1.ダウンロードファイルを解凍 -->「tomcat」フォルダが解凍される
+
+2.上記「tomcat」フォルダを「C:/DEV/tomcat」に移動
+
+＊今回はインストールフォルダを「C:/DEV/tomcat」とする（本当はどこでも良い）
 ```
 
-###### 2-4-2. Eclipse Tomcat Local Server 設定
+
+#### 2-4-2. Eclipse Tomcat Local Server 設定
+
 ```
-1.[Window]→[Preference]→[Server]→[Runtime Environments]→[Add]  
-  →[New Server Runtime Environment]画面で "Apache Tomcat v8.5" を選択
+1.[Preference]→[Server]→[Runtime Environments]→[Add]→[New Server Runtime Environment]
+  : "Apache Tomcat v8.5" を選択
   [Next]ボタン押下
 
 2.[Create a new local server]にチェック（このチェックを忘れないように）
   [Next]ボタン押下
 
-3.[Tomcat Server]画面で以下のパラメータを投入する．
+3.[Tomcat Server]画面で以下のパラメータを投入
   ---------------
   Name:      "Apache Tomcat v8.5"
   directory: "$HOME/tomcat/apache-tomcat-8.5.5"
@@ -196,8 +180,10 @@ ${cursor}
   下部に Servers View が表示されるので、"Tomcat v8.5 Server at localhost" があることを確認
 ```
 
-## 3. Springを使用したプロジェクト作成
-#### 3-1. Mavenプロジェクト作成
+<h2 class="handson">3. Spring frameworkを使用したプロジェクト作成</h2>
+
+### 3-1. Mavenプロジェクト作成
+
 ```
 1.Eclipseの[Package Explorer]タブでプロジェクト作成を選択
   [File]→[New]→[Project]→[Maven]→[Maven Project]→[Next]
@@ -223,11 +209,12 @@ ${cursor}
 4.プロジェクトが作成されプロジェクトがビルドされるのを待つ
 ```
 
-★ここでプロジェクトのビルドが開始されます。ビルドの進捗は右下に地味に表示されています。   
-★ビルドに数分がかかる場合がありますが、終わるまで待っているほうが良いでしょう。  
-★なお現段階では、プロジェクトにエラーが表示されていますが、そのままで結構です。本エラーはこの後解消します。
+ここでプロジェクトのビルドが開始されます。ビルドの進捗は右下に地味に表示されています。ビルドに数分がかかる場合がありますが、終わるまで待っているほうが良いでしょう。
 
-#### 3-2. プロジェクトファセット変更
+なお現段階では、プロジェクトにエラーが表示されていますが、そのままで結構です。本エラーはこの後解消します。
+
+### 3-2. プロジェクトファセット変更
+
 ```
 1.bookmgr プロジェクトを選択して、マウス右ボタンで[Properties]を選択
 
@@ -241,8 +228,9 @@ ${cursor}
   →[Apply] or [Ok] で設定を保存
 ```
 
-#### 3-3. Maven設定ファイル pom.xml に依存ライブラリ情報を追加
-###### 3-3-1. /pom.xml
+### 3-3. Maven設定ファイル pom.xml に依存ライブラリ情報を追加
+
+#### 3-3-1. /pom.xml
 以下のとおりに Springframework など依存するライブラリ定義を追加。
 
 ```xml
@@ -258,9 +246,8 @@ ${cursor}
     <packaging>war</packaging>
     <name>bookmgr</name>
 
-◆
-◆ ---- ↓ここから依存ライブラリ情報を追記 ----
-◆
+
+<!-- @@@@ ここから依存ライブラリ情報を追記 @@@@ -->
 
     <properties>
         <org.springframework-version>4.2.8.RELEASE</org.springframework-version>
@@ -345,17 +332,19 @@ ${cursor}
             </plugin>
         </plugins>
     </build>
-◆
-◆ ---- ↑ここまで依存ライブラリ情報を追記 ----
-◆
+
+<!-- @@@@ ここまで依存ライブラリ情報を追記 @@@@ -->
+
 
 </project>
 ```
 
-★Maven設定ファイル（pom.xml）を更新するとワークスペースのビルドが始まる。ビルドの進捗は右下に地味に表示されているだけなので見落とさないこと。ビルドに数分がかかる場合があるが、終わるまで待っているほうが良い。
+Maven設定ファイル（pom.xml）を更新するとワークスペースのビルドが始まる。ビルドの進捗は右下に地味に表示されているだけなので見落とさないこと。ビルドに数分がかかる場合があるが、終わるまで待っているほうが良い。
 
-#### 3-4. サーブレット設定ファイル web.xml を作成
-###### 3-4-1. /src/main/webapp/web.xml 作成
+### 3-4. サーブレット設定ファイル web.xml を作成
+
+#### 3-4-1. /src/main/webapp/web.xml 作成
+
 ```
 1.格納フォルダ (/src/main/webapp/WEB-INF/) の新規作成
   /src/main/webapp で右クリック→[New]→[Folder]
@@ -374,7 +363,8 @@ ${cursor}
   ---------------
 ```
 
-###### 3-4-2. /src/main/webapp/web.xml コーディング
+#### 3-4-2. /src/main/webapp/web.xml コーディング
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
@@ -417,8 +407,9 @@ ${cursor}
 </web-app>
 ```
 
-#### 3-5. Spring定義ファイル作成
-###### 3-5-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml 及び application-context-web.xml 作成
+### 3-5. Spring定義ファイル作成
+
+#### 3-5-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml 及び application-context-web.xml 作成
 
 ```
 1.格納フォルダ (/src/main/webapp/WEB-INF/spring) の新規作成
@@ -446,7 +437,8 @@ ${cursor}
   ---------------
 ```
 
-###### 3-5-2. /src/main/webapp/WEB-INF/spring/application-context-biz.xml コーディング
+#### 3-5-2. /src/main/webapp/WEB-INF/spring/application-context-biz.xml コーディング
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -464,7 +456,8 @@ ${cursor}
 </beans> 
 ```
 
-###### 3-5-3. /src/main/webapp/WEB-INF/spring/application-context-web.xml コーディング
+#### 3-5-3. /src/main/webapp/WEB-INF/spring/application-context-web.xml コーディング
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -498,8 +491,10 @@ ${cursor}
 </beans> 
 ```
 
-#### 3-6. Log4j 設定ファイル作成
-###### 3-6-1. /src/main/resources/log4j.xml 作成
+### 3-6. Log4j 設定ファイル作成
+
+#### 3-6-1. /src/main/resources/log4j.xml 作成
+
 ```
 log4j.xml ファイル新規作成
 /src/main/resources/ で右クリック→[New]→[File]
@@ -510,7 +505,8 @@ File Name: に "log4j.xml" と入力して[Finish]
 ---------------
 ```
 
-###### 3-6-2. /src/main/resources/log4j.xml コーディング
+#### 3-6-2. /src/main/resources/log4j.xml コーディング
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
@@ -555,18 +551,21 @@ File Name: に "log4j.xml" と入力して[Finish]
 </log4j:configuration>
 ```
 
-#### 3-7. エラーがないことを確認
-このタイミングで画面下の [Markers] タブを参照し、エラーが検出されていたら以下の操作を試してみること。
+### 3-7. エラーがないことを確認
+このタイミングで画面下の [Markers] タブを参照し、エラーが検出されていないことを確認  
+エラーが解消されていない場合は以下の操作を試してみること。
 
 ```
 Project Explorerの [bookmgr] を右クリック→[Maven]→[Update Project]
 ```
 
-★★★ 数秒でプロジェクトが更新されエラーが消えるはず。★★★ ***エラーが残る場合は声掛けしてください***
+＊数秒でプロジェクトが更新されエラーが消えるはず。***エラーが残る場合は声掛けしてください***
 
-## 4. Hello Spring アプリケーション作成
-#### 4-1. Hello Spring 画面コントロールクラス作成
-###### 4-1-1. /src/main/java/jp.sample.bookmgr.web.controller.HelloController.java 作成
+<h2 class="handson">4. Hello Spring アプリケーション作成</h2>
+
+### 4-1. Hello Spring 画面コントロールクラス作成
+
+#### 4-1-1. /src/main/java/jp.sample.bookmgr.web.controller.HelloController.java 作成
 
 ```
 /src/main/java/ で右クリック→[New]→[Class]
@@ -578,7 +577,8 @@ Name: HelloController" と入力して[Finish]
 ---------------
 ```
 
-###### 4-1-2. /src/main/java/jp.sample.bookmgr.web.controller.HelloController.java コーディング
+#### 4-1-2. /src/main/java/jp.sample.bookmgr.web.controller.HelloController.java コーディング
+
 ```java
 package jp.sample.bookmgr.web.controller;
 
@@ -607,8 +607,10 @@ public class HelloController {
 }
 ```
 
-#### 4-2. Hello Spring 画面 View 作成
-###### 4-2-1. /src/main/webapp/WEB-INF/views/hello.jsp 作成
+### 4-2. Hello Spring 画面 View 作成
+
+#### 4-2-1. /src/main/webapp/WEB-INF/views/hello.jsp 作成
+
 ```
 1.Viewファイル格納フォルダ作成
   /src/main/webapp/WEB-INF/ で右クリック→[New]→[Folder]
@@ -627,7 +629,8 @@ public class HelloController {
   ---------------
 ```
 
-###### 4-2-2. /src/main/webapp/WEB-INF/views/hello.jsp コーディング
+#### 4-2-2. /src/main/webapp/WEB-INF/views/hello.jsp コーディング
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -645,7 +648,8 @@ public class HelloController {
 </html>
 ```
 
-#### 4-3. Hello World 画面表示テスト
+### 4-3. Hello World 画面表示テスト
+
 **ここではEclipseにセットアップした"Tomcat Local Server"上でサンプルプログラムを起動**
 
 ```
@@ -658,11 +662,10 @@ public class HelloController {
   "bookmgr" が [Configerd] に入っていることを確認して [Finish]
   ---------------
 
-（注意)上記画面の[Always use this server when running this project]オプションは入れないほうが吉
 
 2.プログラム起動確認
   Eclipseの内部ブラウザが立上り、以下のURLでHello worldが表示されれば完了
   "http://localhost:8080/bookmgr/"
 ```
 
-![Hello Spring Image](/images/step1-1.png "Hello Spring Image")
+![Hello Spring Image]({{ site.baseurl }}/images/step1-1.png "Hello Spring Image")
