@@ -1,0 +1,12 @@
+.handson {
+	padding: .25em 0 .5em .75em;
+	border-left: 8px solid #159957;
+	border-bottom: 1px solid #159957;
+}
+h1.handson {
+	padding: .25em 0 .5em .75em;
+}
+h2.handson {
+	border-left-width: 6px;
+	padding: .125em 0 .25em .5em;
+}
