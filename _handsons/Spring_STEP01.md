@@ -589,7 +589,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Hello Spring 画面コントローラクラス
  * 
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Controller

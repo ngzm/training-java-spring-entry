@@ -9,7 +9,7 @@ paginate:     1
 # About/contact
 author:
   name:       Naoki Nagazumi
-  url:        https://github.com/ngzm
+  url:        https://github.com/ngzm/
 
 # Gems
 gems:
