@@ -57,12 +57,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * 書籍管理メイン画面コントローラクラス
  * 
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Controller
 public class MainController {
-  
   /**
    * ロガー
    */
@@ -157,12 +156,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * 書籍管理処理コントローラクラス
  * 
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Controller // "コントローラとしてDI可能" というアノテーションを宣言
 public class BookController {
-
   /**
    * ロガー
    */

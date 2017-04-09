@@ -4,51 +4,50 @@ step:   "STEP04"
 title:  "Spring JDBC による書籍テーブル検索"
 date:   2017-04-03
 ---
-## 1. PostgreSQL データベースを構築する
-#### 1-1. データベースのセットアップ
-###### 1-1-1. PostgreSQL インストール
-```
-以下のサイトから Installer version Version 9.6.0 (9.6 の最新版でOK)
-http://www.enterprisedb.com/products-services-training/pgdownload
 
-・Win x86-32 もしくは x86-64を選択し普通にインストール
-・今回の管理者パスワードは： nttat123 とすること！
-・上記以外全てデフォルトで良い。
-・最後の「Stack Builder may be…」のチェックは外してインストールを完了させる。
+<h2 class="handson">1. PostgreSQL データベースを構築する</h2>
+### 1-1. データベースのセットアップ
+#### 1-1-1. PostgreSQL インストール
+
+[PostgereSql](http://www.postgresql.org/download/) をダウンロードし普通にインストールする
+
+```
+・今回の管理者パスワードは "nttat123" とする、それ以外全てデフォルトで良い
+・最後の「Stack Builder may be ..」のチェックは外してインストールを完了させる
 ```
 
-###### 1-1-2. データベースの設定
+#### 1-1-2. データベースの設定
+
 ```
 1.PostgreSQLの「psql SHELL」を起動してPostgreSQLに接続
 
 2.psql SHELLから次のSQLを発行して新規データベースを作成
-
   postgres=# CREATE DATABASE springdb encoding 'UTF8';
 ```
 
-###### 1-1-3. 研修用サンプルアプリで使用するテーブルの作成
+#### 1-1-3. 研修用サンプルアプリで使用するテーブルの作成
 ```
-以下のファイルを実行して書籍テーブルを作成 (研修に必要なテーブル作成とサンプルデータ登録を行うSQLを記述)
-
+下記ファイルを実行し書籍テーブルを作成 (研修用書籍テーブル作成と初期データ登録を行うSQL)
   postgres=# create_table.sql
-
 ```
 
 **(参考)**  
-Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツールが添付されており、これを利用してデータベースの各種管理を行うことも可能です。
+Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツールが添付されており、これを利用してデータベースの各種管理を行うことも可能
 
-#### 1-2. 研修用データベースの構成
-###### 1-2-1. PostgreSQLの接続情報
+### 1-2. 研修用データベースの構成
+#### 1-2-1. PostgreSQLの接続情報
 
 | 管理ユーザ | パスワード | データベース |
 |----|----|----|----|----|
 | postgres | nttat123 | springdb |
 
-・書籍テーブルについて
+#### 1-2-2. 書籍テーブル名
 
 | テーブル名 |
 |------|
 | book |
+
+#### 1-2-3. 書籍テーブル仕様
 
 | # |カラム名 | 型 | 制約 | 備考 |
 |:--:|:--|:--|:--|:--|
@@ -58,17 +57,16 @@ Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツール�
 | 4 | price | INTEGER | NOT NULL | - |
 | 5 | lastup | TIMESTAMP | - | default CURRENT_TIMESTAMP |
 
-###### 1-2-2. データベース接続テスト
-上記で示した接続情報でDB接続できること、および書籍テーブル（book）にアクセス可能なことを確認してください。
+<h2 class="handson">2. アプリケーションのDB接続設定</h2>
+### 2-1. Maven設定ファイルにDB接続ドライバを追加する
+#### 2-1-1. /pom.xml 編集
 
-## 2. アプリケーションのDB接続設定
-#### 2-1. Maven設定ファイル pom.xml にDB接続ドライバ（PostgreSQL + JDBC）情報を追加する
-###### 2-1-1. /pom.xml 編集
 ```xml
-◆
-◆省略
-◆-- 36行目付近
-◆
+  <!--
+    @@@@ 省略
+    @@@@ 36行目付近
+    @@@@ -->
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,10 +79,11 @@ Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツール�
             <version>${org.springframework-version}</version>
         </dependency>
 
-    ◆
-    ◆ -- 48行目付近
-    ◆ ---- ↓ここからDB接続ドライバ情報を追加 ----
-    ◆
+      <!--
+        @@@@ 48行目付近
+        @@@@ ここからDB接続ドライバ情報を追加 
+        @@@@ -->
+
         <!-- PostgreSQL + JDBC -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -101,9 +100,10 @@ Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツール�
             <artifactId>postgresql</artifactId>
             <version>9.4.1211.jre7</version>
         </dependency>
-    ◆
-    ◆ ---- ↑ここまでDB接続ドライバ情報を追加 ----
-    ◆
+
+      <!--
+        @@@@ ここまで
+        @@@@ -->
 
         <!-- Logging -->
         <dependency>
@@ -111,15 +111,15 @@ Windows版 PostgreSQL には pgAdminⅢ というグラフィカルなツール�
             <artifactId>slf4j-api</artifactId>
             <version>${org.slf4j-version}</version>
         </dependency>
-◆
-◆以下省略
-◆
+
+  <!-- @@@@ 以下省略 @@@@ -->
 ```
 
-★Maven設定ファイル（pom.xml）を更新するとプロジェクトのビルドが始まります。ビルドの進捗は右下に地味に表示されているだけなので見落とさない様に注意してください。ビルドに数分かかる場合がありますが、終わるまで待っている方が良いかもしれません。
+Maven設定ファイル（pom.xml）を更新するとプロジェクトのビルドが始まります。ビルドの進捗は右下に地味に表示されているだけなので見落とさない様に注意してください。ビルドに数分かかる場合がありますが、終わるまで待っている方が良いかもしれません。
 
-#### 2-2. DB接続情報定義プロパティファイルを作成
-###### 2-2-1. /src/main/resources/jdbc.properties ファイル作成して、次のようにコーディング
+### 2-2. DB接続情報定義プロパティファイルを作成
+#### 2-2-1. /src/main/resources/jdbc.properties ファイル作成して、次のようにコーディング
+
 ```java
 jdbc.driverClassName=org.postgresql.Driver
 jdbc.url=jdbc:postgresql://localhost:5432/springdb
@@ -127,8 +127,9 @@ jdbc.username=postgres
 jdbc.password=nttat123
 ```
 
-#### 2-3. Spring定義ファイルにデータソースとSpring JDBCデータアクセスBean定義を追加
-###### 2-3-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml
+### 2-3. Spring定義ファイルにデータソースとSpring JDBCデータアクセスBean定義を追加
+#### 2-3-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -143,9 +144,11 @@ jdbc.password=nttat123
     <!-- Defines shared resources visible to all other web components -->
     <context:component-scan base-package="jp.sample.bookmgr.biz" />
 
-◆
-◆ ---- ↓ここからDBアクセスに関する定義を追加 ----
-◆
+  <!--
+    @@@@ ここから
+    @@@@ DBアクセスに関する定義を追加
+    @@@@ -->
+
     <!-- DB接続情報定義プロパティファイルの読み込み -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:/jdbc.properties" />
@@ -167,27 +170,28 @@ jdbc.password=nttat123
     <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
         <constructor-arg ref="dataSource" />
     </bean>
-◆
-◆ ---- ↑ここまでDBアクセスに関する定義を追加 ----
-◆
+
+  <!--
+    @@@@ ここまで
+    @@@@ -->
 
 </beans> 
 ```
 
-## 3. データベースにアクセスして書籍一覧を取得してみる
-#### 3-1. 書籍一覧Daoクラスをきちんと実装する
-書籍一覧Ｄａｏは、これまで（えせ）書籍一覧を返していたが、ここで、PostgreSQLデータベースを検索して書籍一覧を取得できるよう、きちんと実装します。
+<h2 class="handson">3. データベースにアクセスして書籍一覧を取得してみる</h2>
+### 3-1. 書籍一覧Daoクラスをきちんと実装する
+書籍一覧Ｄａｏは、これまで（エセ）書籍一覧を返していたが、ここで、PostgreSQLデータベースを検索して書籍一覧を取得できるよう、きちんと実装します。
 
-###### 3-1-1. 書籍一覧Ｄａｏ実装クラスのクラス名を適切なものに変更
-リファクタリングを使って "ListBookDaoImpl" を "ListBookDaoSpringJdbc" に変更してください。  
-**★★リファクタリングの仕方も覚えましょう**
+#### 3-1-1. 書籍一覧Ｄａｏ実装クラスのクラス名を適切なものに変更
+リファクタリングを使って "ListBookDaoImpl" を "ListBookDaoSpringJdbc" に変更   
+**リファクタリングの仕方も覚えましょう**
 
 ```
 ListBookDaoImpl.javaを選択して右クリック [Refacter]-[Rename]
 Rename Compilation Unitウインドウ New Nameに変更後の名称を入力して[Finish]
 ```
 
-###### 3-1-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java インターフェース修正
+#### 3-1-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java インターフェース修正
 Throwする例外オブジェクトを正しいクラスに変更します。
 
 ```java
@@ -201,19 +205,22 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧データアクセスクラスインターフェース
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 public interface ListBookDao {
     /**
      * 書籍データベースから書籍一覧データを取得するメソッド
      * @return 書籍一覧情報
-     */ 
-    public List<Book> getBookList() throws DataAccessException; ◆◆◆<-- ここの例外クラス名を変更するだけ！
+     */
+    public List<Book> getBookList() throws DataAccessException;
+                //@@@@
+                //@@@@ throws 例外クラス名を DataAccessException に変更
+                //@@@@
 }
 ```
 
-###### 3-1-3. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java クラスをきちんと再実装
+#### 3-1-3. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java クラスをきちんと再実装
 これまで、えせ実装だったものを、DBからデータを取得できる形に、きちんと実装し直します。
 
 ```java
@@ -221,12 +228,12 @@ package jp.sample.bookmgr.biz.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-// import java.util.ArrayList; ◆◆◆→ 不要となるので、この宣言は削除してください。
+// import java.util.ArrayList; //@@@@ 不要となるので、この宣言は削除
 import java.util.List;
 
-◆
-◆ import文は適宜追加すること
-◆
+//@@@@
+//@@@@ import文は適宜追加のこと
+//@@@@
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -237,15 +244,16 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧データアクセス実装クラス
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
-@Repository    // リポジトリ（Dao）クラスとしてDI可能というアノテーションを宣言
+@Repository
 public class ListBookDaoSpringJdbc implements ListBookDao {
 
-◆
-◆ ---- ↓以下は大幅に書き替え ----
-◆
+//@@@@
+//@@@@ 以下大幅に書き換え
+//@@@@
+
     /**
      * JDBC制御クラス
      */
@@ -278,16 +286,17 @@ public class ListBookDaoSpringJdbc implements ListBookDao {
         List<Book> bookList = template.query(sql, rowMapper);
         return bookList;
     }
-◆
-◆ ---- ↑以上、大幅に書き替え ----
-◆
+
+//@@@@
+//@@@@ 以上大幅に書き換え
+//@@@@
 }
 ```
 
-★★★Spring JDBC を利用したDB接続および検索方法についての詳細は「Spring3入門」第4章を参照してください。
+Spring JDBC を利用したDB接続および検索方法についての詳細は「Spring3入門」第4章を参照してください。
 
-#### 3-2. 画面表示テスト
+### 3-2. 画面表示テスト
 書籍一覧画面を表示して、データベースに登録された書籍情報が表示されるかどうかをチェックします。
 
-![BookList Image](/images/step4-1.png "BookList Image")
+![BookList Image]({{ site.baseurl }}/images/step4-1.png "BookList Image")
 

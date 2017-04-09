@@ -4,9 +4,11 @@ step:   "STEP03"
 title:  "DIによる（えせ）書籍一覧画面"
 date:   2017-04-03
 ---
-## 1. 書籍情報を保持するドメインクラスを作成する
-#### 1-1. 書籍情報ドメインクラス Book.java 作成
-###### 1-1-1. /src/main/java/jp.sample.bookmgr.biz.domain.Book.java 作成
+
+<h2 class="handson">1. 書籍情報を保持するドメインクラスを作成する</h2>
+### 1-1. 書籍情報ドメインクラス Book.java 作成
+#### 1-1-1. /src/main/java/jp.sample.bookmgr.biz.domain.Book.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[Class]
   
@@ -17,67 +19,70 @@ Name: "Book" と入力して[Finish]
 ---------------
 ```
 
-###### 1-1-2. /src/main/java/jp.sample.bookmgr.biz.domain.Book.java コーディング
+#### 1-1-2. /src/main/java/jp.sample.bookmgr.biz.domain.Book.java コーディング
+
 ```java
 package jp.sample.bookmgr.biz.domain;
 
 /**
  * 書籍クラス
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 public class Book {
+    /**
+    * 書籍ID
+    */
+    private int id = 0;
 
     /**
-     * 書籍ID
-     */
-    private int id = 0;
-    
-    /**
-     * 書籍ISBN
-     */
+    * 書籍ISBN
+    */
     private String isbn = "";
-    
+
     /**
-     * 書籍名
-     */
+    * 書籍名
+    */
     private String name = "";
-    
+
     /**
-     * 書籍価格
-     */
+    * 書籍価格
+    */
     private int price = 0;
-    
+
     /**
-     * 書籍IDゲッタ・セッタ
-     */
+    * 書籍IDゲッタ・セッタ
+    */
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-    
+
     /**
-     *  ISBNゲッタ・セッタ
-     */
+    *  ISBNゲッタ・セッタ
+    */
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
 
     /**
-     *  書籍名ゲッタ・セッタ
-     */
+    *  書籍名ゲッタ・セッタ
+    */
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    
+
     /**
-     *  価格ゲッタ・セッタ
-     */
+    *  価格ゲッタ・セッタ
+    */
     public int getPrice() { return price; }
     public void setPrice(int price) { this.price = price; }
 }
 ```
-ドメインクラスは、アプリケーションで取り扱う各種情報を格納するクラスです。ドメインクラスは、情報を格納するためのプライベートなクラス変数（プロパティと呼ばれます）と、プロパティに格納された情報を取得するパブリックなクラスメソッド（俗にゲッタと呼ばれます）、およびプロパティに情報をセットするパブリックなクラスメソッド（俗にセッタと呼ばれます）で構成されます。
 
-## 2. DI ... （えせ）書籍一覧サービスをインジェクションしてみる
-#### 2-1. 書籍一覧サービス インターフェース 新規作成
-###### 2-1-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookService.java 作成
+ドメインクラスは、アプリケーションで取り扱う各種情報を格納するクラスです。  
+ドメインクラスは、情報を格納するためのプライベートなクラス変数（プロパティ）と、プロパティに格納された情報を取得するパブリックなクラスメソッド（ゲッタ）、およびプロパティに情報をセットするパブリックなクラスメソッド（セッタ）で構成されます。
+
+<h2 class="handson">2. DI ... 書籍一覧サービスをインジェクションしてみる</h2>
+### 2-1. 書籍一覧サービス インターフェース 新規作成
+#### 2-1-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookService.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[interface]
   
@@ -88,7 +93,8 @@ Name: "ListBookService" と入力して[Finish]
 ---------------
 ```
 
-###### 2-1-2. /src/main/java/jp.sample.bookmgr.biz.service.ListBookService.java コーディング
+#### 2-1-2. /src/main/java/jp.sample.bookmgr.biz.service.ListBookService.java コーディング
+
 ```java
 package jp.sample.bookmgr.biz.service;
 
@@ -97,7 +103,7 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧サービスクラスインターフェース
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 public interface ListBookService {
@@ -109,8 +115,9 @@ public interface ListBookService {
 }
 ```
 
-#### 2-2. 書籍一覧サービスクラス新規作成
-###### 2-2-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java 作成
+### 2-2. 書籍一覧サービスクラス新規作成
+#### 2-2-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[class]
   
@@ -122,7 +129,8 @@ Name: "ListBookServiceImple" と入力して[Finish]
 ---------------
 ```
 
-###### 2-2-2. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java コーディング
+#### 2-2-2. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java コーディング
+
 ```java
 package jp.sample.bookmgr.biz.service;
 
@@ -133,23 +141,19 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧サービス実装クラス
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Service // サービスクラスとしてDI可能というアノテーションを宣言
 public class ListBookServiceImpl implements ListBookService {
-    
     /**
      * 書籍一覧取得サービス
      * @return 書籍一覧情報
      */ 
-    @Override
+     @Override
     public List<Book> getBookList() throws Exception {
-
-    ◆
-    ◆ --- ↓ここから、現段階ではえせリストを返す仮実装 
-    ◆
-        // 本当はデータベースからデータを取得する必要があるが現段階では簡易えせリストを作成する
+        // 本当はデータベースからデータを取得する必要があるが
+        // 現段階では簡易えせリストを作成する
         List<Book> bookList = new ArrayList<Book>();
         Book book1 = new Book();
         book1.setId(1);
@@ -157,36 +161,36 @@ public class ListBookServiceImpl implements ListBookService {
         book1.setName("テスト書籍１");
         book1.setPrice(1000);
         bookList.add(book1);
-        
+
         Book book2 = new Book();
         book2.setId(2);
         book2.setIsbn("ISBN-0002");
         book2.setName("テスト書籍２");
         book2.setPrice(2000);
         bookList.add(book2);
-        
+
         Book book3 = new Book();
         book3.setId(3);
         book3.setIsbn("ISBN-0003");
         book3.setName("テスト書籍３");
         book3.setPrice(3000);
         bookList.add(book3);
-    ◆
-    ◆ -- ↑ここまで仮実装
-    ◆
-        
+
         return bookList;
     }
 }
 ```
 
 **(参考)＜Import挿入方法＞**  
-Import文を記述せずに、とりあえずクラス定義を先に作成してみましょう。当然エラーとなりますが、Eclipse の機能を使えば Import 文を後から自動的に挿入させることができます！ぜひこのワザを覚えましょう！
+Import文を記述せずに、とりあえずクラス定義を先に作成してみましょう。当然エラーとなりますが、Eclipse の機能を使えば Import 文を後から自動的に挿入させることができます！  
+ぜひこのワザを覚えましょう！
 
-#### 2-3. 書籍管理コントロールクラスに、書籍一覧サービスをインジェクションして使う
+### 2-3. 書籍管理コントロールクラスに、書籍一覧サービスをインジェクションして使う
+
 BookController に書籍一覧サービスオブジェクトをDIして使用するコードを追加します。
 
-###### 2-3-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java 修正
+#### 2-3-1. /src/main/java/jp.sample.bookmgr.web.controller.BookController.java 修正
+
 ```java
 package jp.sample.bookmgr.web.controller;
 
@@ -206,29 +210,25 @@ import jp.sample.bookmgr.biz.service.ListBookService;
 /**
  * 書籍管理処理コントローラクラス
  * 
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Controller // "コントローラとしてDI可能" というアノテーションを宣言
 public class BookController {
-
     /**
      * ロガー
      */
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
     
-    ◆
-    ◆ ---- ↓書籍一覧サービスオブジェクトをDIするコードを追加 ----
-    ◆
+    //@@@@
+    //@@@@ 書籍一覧サービスオブジェクトをDIする
+    //@@@@
     /**    
      *  書籍一覧処理を実装したビジネスロジックサービス
      */
-    @Autowired        // ListBookServiceオブジェクトをインジェクション
+    @Autowired
     ListBookService listBookService;
-    ◆
-    ◆ ---- ↑ここまで、書籍一覧サービスオブジェクトをDIするコード ----
-    ◆
-    
+
     /**
      * 書籍一覧画面コントローラ
      * 
@@ -236,38 +236,42 @@ public class BookController {
      * @return 画面JSP名
      */ 
     @RequestMapping(value = "/listbook", method = RequestMethod.GET)
-    public String listBook(Model model) throws Exception { ◆◆◆ <--Model model 追加 ◆◆◆
-        
+    public String listBook(Model model) throws Exception {    //@@@@ Model model 追加 @@@@
         logger.debug("listBook() start");
         
-    ◆
-    ◆ ---- ↓DIした書籍一覧サービスロジック処理を実行するコードを追加 ----
-    ◆
+        //@@@@
+        //@@@@ ここから DIした書籍一覧サービスロジック処理を実行するコードを追加
+        //@@@@
+
         // 書籍一覧取得ロジック処理
         List<Book> books = listBookService.getBookList();
 
         // 書籍一覧情報をモデルに登録
         model.addAttribute("books", books);
-    ◆
-    ◆ ---- ↑DIした書籍一覧サービスロジック処理を実行するコードを追加 ----
-    ◆
+
+        //@@@@
+        //@@@@ ここまで
+        //@@@@
         
         // 画面表示に listbook.jsp を呼び出す
         return "listbook";
     }
 
-◆
-◆ 以下省略
-◆
+//@@@@ 以下省略 @@@@
+
 ```
 
-#### 2-4. 書籍一覧画面 View でドメイン情報を表示させる
+### 2-4. 書籍一覧画面 View でドメイン情報を表示させる
 コントローラでModelに設定した書籍一覧情報を表示できるように実装します。
 
-###### 2-4-1. /src/main/webapp/WEB-INF/view/listbook.jsp 修正
+#### 2-4-1. /src/main/webapp/WEB-INF/view/listbook.jsp 修正
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  ◆◆◆← この行追加 ◆◆◆
+
+<!-- @@@@ この行追加 @@@@ -->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -279,9 +283,11 @@ public class BookController {
 
 <h1>書籍一覧画面</h1>
 
-◆
-◆ ---- ↓書籍一覧を表示できるよう修正 ----
-◆
+<!--
+  @@@@ ここから
+  @@@@ 書籍一覧を表示できるよう修正
+  @@@@ -->
+
 <table>
 <tr><th>id</th><th>isbn</th><th>name</th><th>price</th></tr>
 
@@ -294,9 +300,8 @@ public class BookController {
     </tr>
 </c:forEach>
 </table>
-◆
-◆ ---- ↑書籍一覧を表示できるよう修正 ----
-◆
+
+<!-- @@@@ ここまで @@@@ -->
 
 <hr />
 <a href="main">書籍管理メイン画面</a>
@@ -309,11 +314,13 @@ public class BookController {
 プログラムを起動して、書籍一覧画面を表示。  
 うまくコードが実行されるか、うまく画面が表示されるかを確認してください。
 
-![BookList Image](/images/step3-1.png "BookList Image")
+![BookList Image]({{ site.baseurl }}/images/step3-1.png "BookList Image")
 
-## 3.  ＤＩ ・・・ （えせ）書籍一覧Dao をインジェクションしてみる
-#### 3-1. 書籍一覧Dao インターフェース 新規作成
-###### 3-1-1. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java 作成
+<h2 class="handson">3. ＤＩ ... 書籍一覧Dao をインジェクションしてみる</h2>
+
+### 3-1. 書籍一覧Dao インターフェース 新規作成
+#### 3-1-1. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[interface]
   
@@ -324,7 +331,8 @@ Name: "ListBookDao" と入力して[Finish]
 ---------------
 ```
 
-###### 3-1-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java コーディング
+#### 3-1-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDao.java コーディング
+
 ```java
 package jp.sample.bookmgr.biz.dao;
 
@@ -334,11 +342,10 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧データアクセスクラスインターフェース
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 public interface ListBookDao {
-
     /**
      * 書籍データベースから書籍一覧データを取得するメソッド
      * @return 書籍一覧情報
@@ -347,8 +354,9 @@ public interface ListBookDao {
 }
 ```
 
-#### 3-2. 書籍一覧Dao クラス新規作成
-###### 3-2-1. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoImple.java 作成
+### 3-2. 書籍一覧Dao クラス新規作成
+#### 3-2-1. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoImple.java 作成
+
 ```
 /src/main/java/ で右クリック→[New]→[class]
   
@@ -359,7 +367,8 @@ Name: "ListBookDaoImple" と入力して[Finish]
 ---------------
 ```
 
-###### 3-2-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoImple.java コーディング
+#### 3-2-2. /src/main/java/jp.sample.bookmgr.biz.dao.ListBookDaoImple.java コーディング
+
 ```java
 package jp.sample.bookmgr.biz.dao;
 
@@ -372,22 +381,19 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧データアクセス実装クラス
- * @author     長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Repository    // リポジトリ（Dao）クラスとしてDI可能というアノテーションを宣言
 public class ListBookDaoImpl implements ListBookDao {
-
     /**
      * 書籍データベースから書籍一覧データを取得するメソッド
      * @return     書籍一覧情報
      */ 
     @Override
     public List<Book> getBookList() throws Exception {
-    ◆
-    ◆ --- ↓ここから、現段階ではえせリストを返す仮実装 
-    ◆
-        // 本当はデータベースからデータを取得する必要があるが現段階では簡易えせリストを作成する
+        // 本当はデータベースからデータを取得する必要があるが
+        // 現段階では簡易えせリストを作成する
         List<Book> bookList = new ArrayList<Book>();
         Book book1 = new Book();
         book1.setId(1);
@@ -409,23 +415,20 @@ public class ListBookDaoImpl implements ListBookDao {
         book3.setName("テスト書籍３");
         book3.setPrice(3000);
         bookList.add(book3);
-    ◆
-    ◆ --- ↑ここまで仮実装
-    ◆
-        
+
         return bookList;
     }
 }
 ```
 
-#### 3-3. 書籍一覧サービスクラスに、書籍一覧Daoオブジェクトをインジェクションして使う
-###### 3-3-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java を大修正
+### 3-3. 書籍一覧サービスクラスに、書籍一覧Daoオブジェクトをインジェクションして使う
+#### 3-3-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java を大修正
 ListBookServiceImpl は大きく修正します。
 
 ```java
 package jp.sample.bookmgr.biz.service;
 
-// import java.util.ArrayList; ◆◆◆<-- ここ削除
+// import java.util.ArrayList; //@@@@ ここ削除 @@@@
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -436,22 +439,20 @@ import jp.sample.bookmgr.biz.domain.Book;
 
 /**
  * 書籍一覧サービス実装クラス
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 @Service // サービスクラスとしてDI可能というアノテーションを宣言
 public class ListBookServiceImpl implements ListBookService {
-  ◆
-  ◆ ---- ↓書籍一覧DaoオブジェクトをDIする
-  ◆
+
+    //@@@@
+    //@@@@ 書籍一覧DaoオブジェクトをDIする
+    //@@@@
     /**
      *  書籍一覧取得DAO
      */
-    @Autowired        // ListBookDaoオブジェクトをインジェクション
+    @Autowired
     ListBookDao listBookDao;
-  ◆
-  ◆ ---- ↑書籍一覧DaoオブジェクトをDIする
-  ◆
 
     /**
      * 書籍一覧取得サービス
@@ -459,15 +460,14 @@ public class ListBookServiceImpl implements ListBookService {
      */ 
     @Override
     public List<Book> getBookList() throws Exception {
-      ◆
-      ◆ ---- ↓さっきコーディングしたえせリスト作成部分を全て削除
-      ◆ ---- ↓書籍一覧取得処理はDaoオブジェクトに任せる
-      ◆
+
+        //@@@@
+        //@@@@ さきほどコーディングしたエセ書籍リスト作成コードを
+        //@@@@ 全て削除し、書籍一覧DaoのgetBookList() を呼ぶように修正
+        //@@@@
+
         // 書籍一覧を取得
         return listBookDao.getBookList();
-      ◆
-      ◆ ---- ↑ここまで修正
-      ◆
     }
 }
 ```
@@ -475,5 +475,5 @@ public class ListBookServiceImpl implements ListBookService {
 #### 3-4. 画面表示テスト
 プログラムを起動して書籍一覧画面を表示させてみる。うまく画面が表示されるかをご確認ください。
 
-![BookList Image](/images/step3-2.png "BookList Image")
+![BookList Image]({{ site.baseurl }}/images/step3-2.png "BookList Image")
 

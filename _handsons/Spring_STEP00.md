@@ -98,7 +98,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 書籍一覧サービス実装クラス
- * @author  ngzm@NTT-AT
+ * @author  ngzm
  * @version  1.0
  */
 @Service  //@@@@[重要]@@@@ サービスクラスとしてDI可能というアノテーションを宣言
