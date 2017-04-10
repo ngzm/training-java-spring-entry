@@ -4,18 +4,19 @@ step:   "STEP09"
 title:  "テストコードの書き方を覚えよう！その1 単体テスト"
 date:   2017-04-03
 ---
-### 各クラスを個別にテストする方法を試してみる（単体テスト）
+
+## 各クラスを個別にテストする方法を試してみる（単体テスト）
 ここでは作成した各クラスを個別（モジュールごと）にテストする方法を学習します。単体テストでは主にこの方法でテストコードを作成します。
 
 ***
 
-## 1. テスト環境を構築する
-#### 1-1. Spring Framework テストライブラリの追加
-###### 1-1-1. /pom.xml に テストに必要なライブラリ定義を追加
+<h2 class="handson">1. テスト環境を構築する</h2>
+### 1-1. Spring Framework テストライブラリの追加
+#### 1-1-1. /pom.xml に テストに必要なライブラリ定義を追加
+
 ```xml
-◆
-◆ 省略
-◆
+<!-- @@@@ 省略 @@@@ -->
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -24,10 +25,11 @@ date:   2017-04-03
             <version>4.11</version>
         </dependency>
 
-    ◆
-    ◆ -- 111行目付近
-    ◆ ---- ↓ Spring Framework テストライブラリを追加 ----
-    ◆
+    <!--
+      @@@@ 111行目付近
+      @@@@ Spring Framework テストライブラリを追加
+      @@@@ -->
+    
         <!-- Spring + junit -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -42,61 +44,62 @@ date:   2017-04-03
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-◆
-◆ ---- ↑ ここまで、Spring Framework テストライブラリを追加 ----
-◆
 
-    </dependencies>
+<!-- @@@@ 以下省略 @@@@ -->
 ```
 
-★★Maven設定ファイルを更新するとプロジェクトがリビルドする。ビルドの進捗は右下に地味に表示されているだけなので見落とさないこと。ビルドに数秒～数分がかかる場合があるが、終わるまで待っているほうが吉でしょう。
+Maven設定ファイルを更新するとプロジェクトがリビルドする。ビルドの進捗は右下に地味に表示されているだけなので見落とさないこと。ビルドに数秒～数分がかかる場合があるが、終わるまで待っているほうが吉でしょう。
 
-#### 1-2. テスト用Spring MVC設定ファイルを作成
+### 1-2. テスト用Spring MVC設定ファイルを作成
 テスト用に AOP を無効化したSpring設定ファイルを作成します。  
 ついでに、Eclipse でのファイルコピーやファイル名変更の操作方法も覚えましょう。
 
-###### 1-2-1. Spring MVC 設定ファイル（application-context-web.xml）をテスト用にコピーする
+#### 1-2-1. Spring MVC 設定ファイル（application-context-web.xml）をテスト用にコピーする
 - コピー元： /src/main/webapp/WEB-INF/spring/application-context-web.xml
 - コピー先： /src/test/resources/test-context-web.xml
 
-###### 1-2-2. Spring 設定ファイル（application-context-biz.xml）をテスト用にコピーする
+#### 1-2-2. Spring 設定ファイル（application-context-biz.xml）をテスト用にコピーする
 - コピー元： /src/main/webapp/WEB-INF/spring/application-context-biz.xml
 - コピー先： /src/test/resources/test-context-biz.xml
 
-###### 1-2-3. /src/test/resources/test-context-biz.xml AOPを無効化する
+#### 1-2-3. /src/test/resources/test-context-biz.xml AOPを無効化する
+
 ```xml
-◆
-◆ -- 17行目付近
-◆ ---- ↓ AOPを有効にする設定をコメントアウトする ----
-◆
+  <!--
+    @@@@ 17行目付近
+    @@@@ AOP を有効にする設定をコメントアウト
+    @@@@ -->
+
     <!-- Enables the Spring AOP -->
     <!-- テストのためAOPを無効化する
     <aop:aspectj-autoproxy />
     --> 
-◆
-◆ 以下省略
-◆
+
+<!-- @@@@ 以下省略 @@@@ -->
 ```
 
-## 2. 正常系のテストコードを書いてみる
+<h2 class="handson">2. 正常系のテストコードを書いてみる</h2>
 ＤＡＯクラスを例にとって、正常系テストケースを書いてみましょう。
 
-#### 2-1. 書籍一覧Daoクラスの正常系テストケース作成
-###### 2-1-1. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java を新規作成
-★★テストコードは、"/src/test" の配下に保存する必要があります。注意してください。
-```
-/src/test/java で右クリック→[New]→[Class]（もしくは[jUnit Test Case]）
+### 2-1. 書籍一覧Daoクラスの正常系テストケース作成
+#### 2-1-1. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java を新規作成
+テストコードは、"/src/test" の配下に保存する必要があります。注意してください。
 
----------------
-Java Class 画面
----------------
- [Package]: "jp.sample.bookmgr.biz.dao"
- [Name]:    "ListBookDaoSpringJdbcTest" と入力して[Finish]
----------------
-テストケースのひな形が自動作成される
+```
+・/src/test/java で右クリック→[New]→[Class]（もしくは[jUnit Test Case]）
+
+  ---------------
+  Java Class 画面
+  ---------------
+   [Package]: "jp.sample.bookmgr.biz.dao"
+   [Name]:    "ListBookDaoSpringJdbcTest" と入力して[Finish]
+  ---------------
+
+・テストケースのひな形が自動作成される
 ```
 
-###### 2-1-2. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java をコーディング
+#### 2-1-2. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java をコーディング
+
 ```java
 package jp.sample.bookmgr.biz.dao;
 
@@ -125,7 +128,7 @@ import jp.sample.bookmgr.biz.domain.Book;
 /**
  * 書籍一覧データアクセス実装クラステストケース
  * 
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 
@@ -184,7 +187,8 @@ public class ListBookDaoSpringJdbcTest {
 }
 ```
 
-###### 2-1-3. 書籍一覧Daoクラスのテストケースを実行してみる
+#### 2-1-3. 書籍一覧Daoクラスのテストケースを実行してみる
+
 ```
 1.クラス単位でテストケース実行する
   - テストケースのクラスを選択し右クリック→[Run as]→[JUnit Test]
@@ -196,23 +200,26 @@ public class ListBookDaoSpringJdbcTest {
 
 テストコードにエラーがある場合やテスト結果にバグがある場合は、JUnitビューのアイコンで識別できます。さらに、エラーをダブルクリックすると該当テストケースのコードが表示されます。
 
-#### 2-2. 書籍登録Daoクラスの正常系テストケース作成
-###### 2-2-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java を新規作成
-★★テストコードは、"/src/test" の配下に保存する必要があります。注意してください。
+### 2-2. 書籍登録Daoクラスの正常系テストケース作成
+#### 2-2-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java を新規作成
+
+テストコードは、"/src/test" の配下に保存する必要があります。注意してください。
 
 ```
-/src/test/java で右クリック→[New]→[Class]（もしくは[jUnit Test Case]）
+・/src/test/java で右クリック→[New]→[Class]（もしくは[jUnit Test Case]）
 
----------------
-Java Class 画面
----------------
- [Package]: "jp.sample.bookmgr.biz.dao"
- [Name]:    "AddBookDaoSpringJdbcTest" と入力して[Finish]
----------------
-テストケースのひな形が自動作成される
+  ---------------
+  Java Class 画面
+  ---------------
+   [Package]: "jp.sample.bookmgr.biz.dao"
+   [Name]:    "AddBookDaoSpringJdbcTest" と入力して[Finish]
+  ---------------
+
+・テストケースのひな形が自動作成される
 ```
 
-###### 2-2-2. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java をコーディング
+#### 2-2-2. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java をコーディング
+
 ```java
 package jp.sample.bookmgr.biz.dao;
 
@@ -239,7 +246,7 @@ import jp.sample.bookmgr.biz.domain.Book;
 /**
  * 書籍登録データアクセス実装クラステストケース
  *  
- * @author 長住@NTT-AT
+ * @author ngzm
  * @version 1.0
  */
 
@@ -297,17 +304,18 @@ public class AddBookDaoSpringJdbcTest {
 }
 ```
 
-###### 2-2-3. 書籍登録Daoクラスのテストケースを実行してみる
+#### 2-2-3. 書籍登録Daoクラスのテストケースを実行してみる
 テストケース（AddBookDaoSpringJdbcTest.java）をjUnitで実行して、結果を確認してください。
 
-#### 2-3. 書籍登録Daoクラスの正常系テストケース（別パターン）を追加
-###### 2-3-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java に次のテストケースを追加
+### 2-3. 書籍登録Daoクラスの正常系テストケース（別パターン）を追加
+#### 2-3-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java に次のテストケースを追加
+
 ```java
-◆
-◆ 省略
-◆ -- 81行目付近 testAddBook_normal_1() の次に挿入
-◆ ---- ↓ 正常系テストケースを追加 ----
-◆
+// @@@@
+// @@@@ 省略
+// @@@@ 81行目付近 testAddBook_normal_1() の次に挿入
+// @@@@ 正常系テストケースを2つ追加
+
     /**
      * addBookDao.addBook() のテストケース
      * 正常系その２
@@ -354,26 +362,26 @@ public class AddBookDaoSpringJdbcTest {
         addBookDao.addBook(book1);
         verify(mockJdbc, never()).update(eq(sql), refEq(pmap));
     }
-◆
-◆ ---- ↑ ここまで、正常系テストケース追加 ----
-◆ 省略
-◆
+
+// @@@@ ここまで
+// @@@@ 以下省略
 ```
 
-###### 2-3-2. 書籍登録Daoクラスのテストケースを実行してみる
+#### 2-3-2. 書籍登録Daoクラスのテストケースを実行してみる
 テストケース（AddBookDaoSpringJdbcTest.java）をjUnitで実行して、結果を確認してください。
 
-## 3. 異常系のテストコードを書いてみる
+<h2 class="handson">3. 異常系のテストコードを書いてみる</h2>
 続いて、異常系テストケースの書き方を学習しましょう。
 
-#### 3-1. 書籍一覧Daoクラスの異常系テストケース追加
-###### 3-1-1. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java に異常系テストケースを追加
+### 3-1. 書籍一覧Daoクラスの異常系テストケース追加
+#### 3-1-1. /src/test/java/jp.sample.bookmgr.biz.dao.ListBookDaoSpringJdbc.java に異常系テストケースを追加
+
 ```java
-◆
-◆ 省略
-◆ -- 85行目付近
-◆ ---- ↓書籍一覧Daoクラスの異常系テストケース追加 ----
-◆
+// @@@@
+// @@@@ 省略
+// @@@@ 85行目付近 testAddBook_normal_1() の次に挿入
+// @@@@ 書籍一覧Daoクラスの異常系テストケースを追加
+
     /**
      * ListBookDao.getBookList() のテストケース
      * 異常系その１
@@ -391,24 +399,22 @@ public class AddBookDaoSpringJdbcTest {
         // DataAccessExceptionがThrowされるはず
         listBookDao.getBookList();
     } 
-◆
-◆ ---- ↑ここまで、書籍一覧Daoクラスの異常系テストケース追加 ----
-◆
 
-}
+// @@@@ ここまで
+// @@@@ 以下省略
 ```
 
-###### 3-1-2. 書籍一覧Daoクラスのテストケースを実行してみる
+#### 3-1-2. 書籍一覧Daoクラスのテストケースを実行してみる
 テストケース ListBookDaoSpringJdbcTest.java を[Run as]→[jUnit]で実行し結果を確認してください。
 
-#### 3-2. 書籍登録Daoクラスの異常系テストケース追加
-###### 3-2-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java に異常系テストケースを追加
+### 3-2. 書籍登録Daoクラスの異常系テストケース追加
+#### 3-2-1. /src/test/java/jp.sample.bookmgr.biz.dao.AddBookDaoSpringJdbc.java に異常系テストケースを追加
 ```java
-◆
-◆ 省略
-◆ -- 128行目付近
-◆ ---- ↓書籍登録Daoクラスの異常系テストケース追加 ----
-◆
+// @@@@
+// @@@@ 省略
+// @@@@ 128行目付近 testAddBook_normal_1() の次に挿入
+// @@@@ 書籍登録Daoクラスの異常系テストケースを追加
+
     /**
      * addBookDao.addBook() のテストケース
      * 異常系その１
@@ -431,12 +437,10 @@ public class AddBookDaoSpringJdbcTest {
         // DataAccessExceptionがThrowされるはず
         addBookDao.addBook(book1);
     }
-◆
-◆ ---- ↑ここまで、書籍登録Daoクラスの異常系テストケース追加 ----
-◆
 
-}
+// @@@@ ここまで
+// @@@@ 以下省略
 ```
 
-###### 3-2-2. 書籍登録Daoクラスのテストケースを実行してみる
+#### 3-2-2. 書籍登録Daoクラスのテストケースを実行してみる
 テストケース AddBookDaoSpringJdbcTest.java を[Run as]→[jUnit]で実行し結果を確認してください。
