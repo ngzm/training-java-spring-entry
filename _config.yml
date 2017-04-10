@@ -22,3 +22,7 @@ collections:
 
 #Others
 markdown: kramdown
+
+# Excludes
+exclude:
+  - vendor
