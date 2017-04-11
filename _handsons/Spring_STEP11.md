@@ -4,29 +4,32 @@ step:   "STEP11"
 title:  "ログイン認証とトランザクション管理"
 date:   2017-04-03
 ---
-## 1. ログイン認証を実装する
-#### 1-1. 認証ライブラリ Spring Security を利用するための準備
-###### 1-1-1. /pom.xml
+
+<h2 class="handson">1. ログイン認証を実装する</h2>
+### 1-1. 認証ライブラリ Spring Security を利用するための準備
+#### 1-1-1. /pom.xml
+
 ここでは、Spring フレームワークが提供する Spring Security を利用した認証方法を学習します。  
 以下の通りに、pom.xml の2箇所に Spring Security の定義を追加してください。
 
 ```xml
-◆
-◆ 省略
-◆ -- 9行目付近 -- <org.springfsecurity-version> の定義を追加してください。
-◆
+<!--
+  @@@@ 省略
+  @@@@ 9行目付近
+  @@@@ <org.springsecurity-version> の定義を追加
+  @@@@ -->
+
     <properties>
         <org.springframework-version>4.2.8.RELEASE</org.springframework-version>
-        <org.springfsecurity-version>4.0.4.RELEASE</org.springfsecurity-version>  ◆◆◆ この行だけ追加 ◆◆◆
+
+<!-- @@@@ この行追加 @@@@ -->
+        <org.springfsecurity-version>4.0.4.RELEASE</org.springfsecurity-version>
+
         <org.slf4j-version>1.7.21</org.slf4j-version>
     </properties>
 
-◆
-◆ 省略
-◆
-    ◆
-    ◆ -- 77行目付近
-    ◆
+<!-- @@@@ 途中省略 @@@@ 77行目付近 @@@@ -->
+
         <!-- Validation -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -34,10 +37,11 @@ date:   2017-04-03
             <version>5.1.3.Final</version>
         </dependency>
         
-    ◆
-    ◆ -- 84行目付近
-    ◆ -- 以下、Spring Security ライブラリの定義を追加
-    ◆
+<!--
+  @@@@ 84行目付近
+  @@@@ Spring Security ライブラリの定義を追加
+  @@@@ -->
+
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -54,9 +58,8 @@ date:   2017-04-03
             <artifactId>spring-security-config</artifactId>
             <version>${org.springfsecurity-version}</version>
         </dependency>
-    ◆
-    ◆ -- ここまで、Spring Security ライブラリの定義を追加
-    ◆
+
+<!-- @@@@ ここまで @@@@ -->
 
         <!-- Logging -->
         <dependency>
@@ -64,17 +67,19 @@ date:   2017-04-03
             <artifactId>slf4j-api</artifactId>
             <version>${org.slf4j-version}</version>
         </dependency>
-◆
-◆ 以下省略
-◆
-```
-★Maven設定ファイル（pom.xml）を更新するとワークスペースのビルドが始まります。ビルドに数分がかかる場合がありますが、終わるまで待っているほうが良いでしょう。
 
-#### 1-2. Spring Security 定義ファイルを用意する
-###### 1-2-1. /src/main/webapp/WEB-INF/spring/application-context-security.xml を新規作成
+<!-- @@@@ 以下省略 @@@@ -->
+```
+
+Maven設定ファイル（pom.xml）を更新するとワークスペースのビルドが始まります。ビルドに数分がかかる場合がありますが、終わるまで待っているほうが良いでしょう。
+
+### 1-2. Spring Security 定義ファイルを用意する
+#### 1-2-1. /src/main/webapp/WEB-INF/spring/application-context-security.xml を新規作成
+
 /src/main/webapp.WEB-INF/spring/application-context-security.xml を新規作してください。
 
-###### 1-2-2. /src/main/webapp/WEB-INF/spring/application-context-security.xml をコーディング
+#### 1-2-2. /src/main/webapp/WEB-INF/spring/application-context-security.xml をコーディング
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -132,26 +137,33 @@ date:   2017-04-03
 </beans>
 ```
 
-#### 1-3. サーブレット設定ファイル（web.xml）から Spring Security 定義 ファイルをロード
-###### 1-3-1. /src/main/webapp/WEB-INF/web.xml に定義を追加
+### 1-3. サーブレット設定ファイル（web.xml）から Spring Security 定義 ファイルをロード
+#### 1-3-1. /src/main/webapp/WEB-INF/web.xml に定義を追加
+
 ```xml
-◆
-◆ 省略
-◆ -- xxx行目付近 -- /WEB-INF/spring/application-context-web.xml を追加
-◆
+<!--
+  @@@@ 省略
+  @@@@ XX 行目付近
+  @@@@ /WEB-INF/spring/application-context-web.xml を追加
+  @@@@ -->
+
     <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
             /WEB-INF/spring/application-context-biz.xml
-            /WEB-INF/spring/application-context-security.xml  ◆◆◆←この行追加 ◆◆◆
+
+<!-- @@@@ この行追加 @@@@ -->
+            /WEB-INF/spring/application-context-security.xml
+
         </param-value>
     </context-param>
-◆
-◆ 省略
-◆ -- xxx行目付近
-◆ ---- 以下の通り、Spring Security フィルタの定義を追加
-◆
+
+<!--
+  @@@@ 省略
+  @@@@ Spring Security フィルタの定義を追加
+  @@@@ -->
+
     <!-- Spring Securityフィルタの設定 -->
     <filter>        
         <filter-name>springSecurityFilterChain</filter-name>
@@ -161,19 +173,20 @@ date:   2017-04-03
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-◆
-◆ ---- ここまで、Spring Security フィルタの定義を追加
-◆
+
+<!-- @@@@ ここまで @@@@ -->
+
 </web-app>
 ```
 
-#### 1-4. ログインフォーム画面とアクセス不可エラー画面を用意する
-###### 1-4-1. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java
+### 1-4. ログインフォーム画面とアクセス不可エラー画面を用意する
+#### 1-4-1. /src/main/java/jp.sample.bookmgr.web.controller.MainController.java
+
 ログインフォーム画面とログイン処理のコントロールメソッドをMainController に追加します。
+
 ```java
-◆
-◆ import 文省略
-◆
+// @@@@ import 文省略
+
 @Controller
 public class MainController {
     
@@ -182,10 +195,11 @@ public class MainController {
      */
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     
-  ◆
-  ◆ -- xxx行目付近
-  ◆ ---- ↓ ログインフォーム画面コントローラを追加
-  ◆
+    // @@@@ 
+    // @@@@ xxx 行目付近
+    // @@@@ ログインフォーム画面コントローラを追加
+    // @@@@ 
+
     /**
      * ログインフォーム画面コントローラ
      *    
@@ -196,10 +210,12 @@ public class MainController {
         // 画面表示にloginform.jsp を呼び出す
         return "loginform";
     }
-  ◆
-  ◆ ---- ↑ ここまで、ログインフォーム画面コントローラを追加
-  ◆ ---- ↓ アクセス不可エラー画面コントローラを追加
-  ◆
+
+    // @@@@ 
+    // @@@@ ここまで ログイン画面コントローラ
+    // @@@@ 以下、アクセス不可エラー画面コントローラを追加
+    // @@@@ 
+
     /**
      * アクセス不可エラー画面コントローラ
      *
@@ -209,27 +225,15 @@ public class MainController {
     public String accessError() {
         return "error/accesserror";
     }
-  ◆
-  ◆ ---- ↑ ここまで、ログインエラー画面コントローラを追加
-  ◆
 
-    /**
-     * 書籍管理メイン画面コントローラ
-     * 
-     * @return 画面JSP名
-     */
-    @RequestMapping(value = "/main", method = RequestMethod.GET)
-    public String main() throws Exception {
-        
-        logger.debug("main() start");
-        
-        // 画面表示に main.jsp を呼び出す
-        return "main";
-    }
-}
+    // @@@@ 
+    // @@@@ ここまで アクセス不可エラー画面コントローラ
+    // @@@@ 以下省略
+    // @@@@ 
 ```
 
-###### 1-4-2. /src/main/webapp/WEB-INF/views/loginform.jsp
+#### 1-4-2. /src/main/webapp/WEB-INF/views/loginform.jsp
+
 ログインフォーム画面View（loginform.jsp）新規作成
 
 ```jsp
@@ -271,8 +275,10 @@ public class MainController {
 </html>
 ```
 
-###### 1-4-3. /src/main/webapp/WEB-INF/views/error/accesserror.jsp
+#### 1-4-3. /src/main/webapp/WEB-INF/views/error/accesserror.jsp
+
 アクセス不可エラー画面View（error/accesserror.jsp）新規作成
+
 ```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -294,57 +300,58 @@ public class MainController {
 </html>
 ```
 
-###### 1-4-4. /src/main/webapp/WEB-INF/views/main.jsp
+#### 1-4-4. /src/main/webapp/WEB-INF/views/main.jsp
+
 main 画面View（main.jsp）にログアウトのリンクを追加
 
 ```jsp
-◆
-◆
-◆ 省略
-◆
+<!-- @@@@ 省略 @@@@ -->
+
 <a href="listbook">書籍一覧画面</a>
 <br />
 <a href="addbookform">書籍登録画面</a>
-<br />                                ◆◆◆ -- 17行目付近 -- 左記を追加 ◆◆◆
-<a href="logout">ログアウト</a>       ◆◆◆ -- 18行目付近 -- 左記を追加 ◆◆◆
+<br />                            <!-- @@@@ 17行目付近 左記を追加 @@@@ -->
+<a href="logout">ログアウト</a>   <!-- @@@@ 18行目付近 左記を追加 @@@@ -->
 </body>
 ```
 
-#### 1-5. 画面表示テスト
-###### 1-5-1. ログイン画面
+### 1-5. 画面表示テスト
+#### 1-5-1. ログイン画面
+
 1) プログラムを起動すると、ログイン画面が表示されることを確認してください。
 
-![login1 Image](/images/step10-1.png "login1 Image")
+![login1 Image]({{ site.baseurl }}/images/step10-1.png "login1 Image")
 
 2) ログインIDに user1／パスワードに password1 を入力るとHome画面に遷移することを確認してください。  
 同様に、user2/password2  user3/password3 でもログインできるはずです。
 
-![login2 Image](/images/step10-2.png "login2 Image")
+![login2 Image]({{ site.baseurl }}/images/step10-2.png "login2 Image")
 
 3) 正常にログインしたら main画面が表示されますが、main画面にある [ログアウト]リンクをクリックするとログイン画面に戻ることを確認してください。
 
-![main Image](/images/step10-3.png "main Image")
+![main Image]({{ site.baseurl }}/images/step10-3.png "main Image")
 
-![login3 Image](/images/step10-4.png "login3 Image")
+![login3 Image]({{ site.baseurl }}/images/step10-4.png "login3 Image")
 
 このとき、既にログアウト処理が走っていますので、戻るボタンなどで main 画面に戻ることはできません。
 
 4) 不正な ID/Password を入力した場合は、エラーメッセージが表示されたログイン画面に戻ることを確認してください。
 
-![login4 Image](/images/step10-5.png "login4 Image")
+![login4 Image]({{ site.baseurl }}/images/step10-5.png "login4 Image")
 
 5) ログインしていない状態で、アドレスバーからダイレクトにメイン画面や書籍一覧画面のURLを入力してみます。  
 すると、その画面に遷移することなく、ログイン画面が表示することを確認してください。
 
-![login5 Image](/images/step10-6.png "login5 Image")
+![login5 Image]({{ site.baseurl }}/images/step10-6.png "login5 Image")
 
 この状態でログインすると、ダイレクトに指定したURLに対する画面に遷移するはずです。
 
-![bookList Image](/images/step10-7.png "bookList Image")
+![bookList Image]({{ site.baseurl }}/images/step10-7.png "bookList Image")
 
-## 2. トランザクション管理を実装する
-#### 2-1. トランザクションマネージャを利用できるようにする
-###### 2-1-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml
+<h2 class="handson">2. トランザクション管理を実装する</h2>
+### 2-1. トランザクションマネージャを利用できるようにする
+#### 2-1-1. /src/main/webapp/WEB-INF/spring/application-context-biz.xml
+
 Spring定義ファイルにトランザクションマネージャの定義を追加する
 
 ```xml
@@ -353,16 +360,16 @@ Spring定義ファイルにトランザクションマネージャの定義を�
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx"             ◆◆◆ ←この行を追加 ◆◆◆
+    xmlns:tx="http://www.springframework.org/schema/tx"              @@@@ この行追加 @@@@
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop.xsd    ◆◆◆ ←最後の">を削除 ◆◆◆
-        http://www.springframework.org/schema/tx                    ◆◆◆ ←この行を追加 ◆◆◆
-        http://www.springframework.org/schema/tx/spring-tx.xsd">    ◆◆◆ ←この行を追加 ◆◆◆
+        http://www.springframework.org/schema/aop/spring-aop.xsd    @@@@ 最後の">を削除 @@@@
+        http://www.springframework.org/schema/tx                    @@@@ この行追加 @@@@
+        http://www.springframework.org/schema/tx/spring-tx.xsd">    @@@@ この行追加 @@@@
         
     <!-- Defines shared resources visible to all other web components -->
     <context:component-scan base-package="jp.sample.bookmgr.biz" />
@@ -401,33 +408,33 @@ Spring定義ファイルにトランザクションマネージャの定義を�
         <property name="validationMessageSource" ref="messageSource" />
     </bean>
 
-◆
-◆ -- XX行目付近
-◆ -- ↓トランザクションマネージャの定義を追加
-◆
+<!--
+  @@@@ xx 行目付近
+  @@@@ トランザクションマネージャの定義を追加
+  @@@@ -->
+
     <!-- Transaction Manager -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
     <!-- アノテーションベースのトランザクションを有効にする -->
     <tx:annotation-driven />
-◆
-◆ -- ↑ここまで、トランザクションマネージャの定義を追加
-◆
+
+<!-- @@@@ ここまで @@@@ -->
 
 </beans>
 ```
 
-#### 2-2. トランザクション管理を実装する
-###### 2-2-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java
+### 2-2. トランザクション管理を実装する
+#### 2-2-1. /src/main/java/jp.sample.bookmgr.biz.service.ListBookServiceImple.java
+
 書籍一覧サービスに readOnly モードでトランザクションを設定します。  
 書籍一覧サービス「ListBookServiceImple」はDB更新がないため、トランザクションモードは readOnly で設定します。
 
 ```java
-◆
-◆ 省略
-◆ -- 17行目付近
-◆
+// @@@@ 省略
+// @@@@ 17行目付近
+
 @Service // サービスクラスとしてDI可能というアノテーションを宣言
 public class ListBookServiceImple implements ListBookService {
     /**
@@ -441,7 +448,7 @@ public class ListBookServiceImple implements ListBookService {
      * @return    書籍一覧情報
      */ 
     @Override
-    @Transactional(readOnly=true)     ◆◆◆ ← この行を追加 ◆◆◆
+    @Transactional(readOnly=true)     // @@@@ Transactional アノテーションを追加 @@@@
     public List<Book> getBookList() throws Exception {
         // 書籍一覧を取得
         return listBookDao.getBookList();
@@ -449,15 +456,15 @@ public class ListBookServiceImple implements ListBookService {
 }
 ```
 
-###### 2-2-2. /src/main/java/jp.sample.bookmgr.biz.service.AddBookServiceImple.java
+#### 2-2-2. /src/main/java/jp.sample.bookmgr.biz.service.AddBookServiceImple.java
+
 書籍登録サービスに、ReadCommitted モードでトランザクションを設定します。  
 書籍追加サービス「AddBookServiceImple」はDB更新系なので、ReadCommitted モードでトランザクションを設定します。
 
 ```java
-◆
-◆ 省略
-◆ -- 15行目付近
-◆
+// @@@@ 省略
+// @@@@ 15行目付近
+
 @Service    // サービスクラスとしてDI可能というアノテーションを宣言
 public class AddBookServiceImple implements AddBookService {
     /**
@@ -472,19 +479,18 @@ public class AddBookServiceImple implements AddBookService {
      * @param Book 書籍情報
      */ 
     @Override
-  ◆
-  ◆ -- xx 行目
-  ◆ -- ↓更新系のトランザクション制御を設定する
-  ◆
+
+    // @@@@ xx 行目
+    // @@@@ 更新系のトランザクション制御を設定する
     @Transactional(
         propagation=Propagation.REQUIRED,
         isolation=Isolation.READ_COMMITTED,
         timeout=10,
         readOnly=false,
         rollbackFor=RuntimeException.class)
-  ◆
-  ◆ -- ↑ここまで、更新系のトランザクション制御を設定する
-  ◆
+
+    // @@@@ ここまで @@@@
+
     public void addBook(Book book) throws Exception {
         // 書籍登録を行うDAOクラスを使用して書籍情報を永続化する
         addBookDao.addBook(book);
@@ -493,4 +499,4 @@ public class AddBookServiceImple implements AddBookService {
 ```
 
 #### 2-3. トランザクション制御のテスト
-★コードを追加しないとできないため講師の方でデモを行います。
+コードを追加しないとできないため講師の方でデモを行います。
