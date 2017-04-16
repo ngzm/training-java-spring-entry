@@ -1,10 +1,23 @@
 ---
 layout: default
 step:   "HOME"
-title:  "Spring Framework 入門"
+title:  "Spring Framework Elementary"
 ---
+
 <div id="home">
-  <h1>Contents</h1>
+  <h1>Traning Texts</h1>
+  <ul class="posts">
+    {% assign sorted_texts = (site.texts | sort:"step") %}
+    {% for text in sorted_texts %}
+      <li><a href="{{ site.baseurl }}{{ text.url }}">
+          {{ text.step }} - {{ text.title }}
+      </a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div id="home">
+  <h1>Handon Documents</h1>
   <ul class="posts">
     {% assign sorted_handsons = (site.handsons | sort:"step") %}
     {% for handson in sorted_handsons %}

@@ -18,7 +18,9 @@ gems:
 # Collections
 collections:
   handsons:
-    output:   true
+    output: true
+  texts:
+    output: true 
 
 #Others
 markdown: kramdown
