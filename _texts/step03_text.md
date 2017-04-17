@@ -203,7 +203,42 @@ date:   2017-04-17
 - このため、比較的大規模なアプリケーションの場合に有効である
 - そもそもSpringは 設定ファイルによるＤＩのみサポートしていたが、Spring2.5から、アノテーションによるＤＩがサポートされ、利便性が大幅に向上した経緯がある
 
-<h2 class="handson">3. ハンズオン実習</h2>
+<h2 class="handson">3. 技術解説 - ドメイン情報を画面表示 - Spring MVC</h2>
+
+### 3-1. ドメインオブジェクトの情報を画面に渡す
+
+- Domain を画面（JSP）に渡すには、Spring MVC に用意されている Model オブジェクトを使う
+- Modelオブジェクトは、Model - View - Controller の Model に該当
+- すなわち、Controller からView に引き渡すデータを格納するオブジェクト
+
+    ![MVC model]({{ site.baseurl }}/images/texts/tech_step03_05.png "MVC Model")
+
+- Book ドメインを Model に登録するサンプルコード
+
+    ```java
+    @RequestMapping(value = "/listbook", method = RequestMethod.GET)
+    public String listBook(Model model) throws Exception {
+                  // @@@@   ↑
+                  // @@@@ Modelオブジェクトをコントローラメソッドの引数で取得
+                  // @@@@
+
+      // 書籍一覧取得ロジック処理、Domain オブジェクト取得
+      List<Book> books = listBookService.getBookList();
+
+      // 書籍一覧情報をモデルに登録
+      model.addAttribute("books", books);
+              // @@@@      ↑
+              // @@@@ Domain オブジェクト book を Model に登録
+              // @@@@ 上記の場合 "books" という名前で登録している
+              // @@@@
+
+      // 画面表示に listbook.jsp を呼び出す
+      return "listbook";
+    }
+    ```
+
+
+<h2 class="handson">4. ハンズオン実習</h2>
 
 ### STEP02 ハンズオン
 
