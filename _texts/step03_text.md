@@ -102,7 +102,7 @@ date:   2017-04-17
     @Service  // @@@@ サービスをDIコンテナに格納するアノテーション @@@@
     public class ListBookServiceImpl implements ListBookService {
       // Something to do ..
-      //書籍一覧取得サービス
+
     }
     ```
 
@@ -138,7 +138,10 @@ date:   2017-04-17
       // @@@@ ByType で一致するオブジェクトをインジェクションする
       // @@@@
       @Autowired
-      ListBookService  listBookService; // @@@@ <-- 型が一致するオブジェクトが自動で代入される
+      ListBookService  listBookService;
+      // @@@@ ↑
+      // @@@@ DI コンテナから型が一致するオブジェクトを検索
+      // @@@@ 一致するオブジェクトが見つかったら該当の変数に代入される
       
       @RequestMapping(value = "/listbook", method = RequestMethod.GET)
       public String listBook(Model model) throws Exception {
@@ -191,6 +194,9 @@ date:   2017-04-17
     public class BookController {
       @Autowired
       ListBookService  listBookService;
+      // @@@@ ↑
+      // @@@@ インターフェースの型で宣言することがミソ
+      // @@@@ これにより、より抽象化した型で合致するオブジェクトが検索される
 
       // Something to do
     }
@@ -227,23 +233,61 @@ date:   2017-04-17
 
       // 書籍一覧情報をモデルに登録
       model.addAttribute("books", books);
-              // @@@@      ↑
-              // @@@@ Domain オブジェクト book を Model に登録
-              // @@@@ 上記の場合 "books" という名前で登録している
-              // @@@@
+                  // @@@@   ↑
+                  // @@@@ Domain オブジェクト book を Model に登録
+                  // @@@@ 上記の場合 "books" という名前で登録している
+                  // @@@@
 
       // 画面表示に listbook.jsp を呼び出す
       return "listbook";
     }
     ```
 
+### 3-2. 渡されたドメインオブジェクト情報を画面に表示する
+
+- Modelオブジェクトに格納した Domain は、Modelオブジェクト格納時に設定した名前でJSPに引き渡される
+- つまり自動的にHttpServletReqestに設定されることと同意
+
+    ```jsp
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <html>
+    <head><title>書籍一覧画面</title></head>
+    <body>
+    <h1>書籍一覧画面</h1>
+    <table>
+      <tr><th>id</th><th>isbn</th><th>name</th><th>price</th></tr>
+
+        <!-- @@@@
+             @@@@ Model から Domain オブジェクトを取り出す
+             @@@@ 下記例の場合、"books" という名前でアクセスできる
+             @@@@ -->
+
+      <c:forEach items="${books}" var="book" varStatus="status">
+        <tr>
+          <td><c:out value="${book.id}" /></td>
+          <td><c:out value="${book.isbn}" /></td>
+          <td><c:out value="${book.name}" /></td>
+          <td><c:out value="${book.price}" /></td>
+        </tr>
+      </c:forEach>
+
+        <!-- @@@@ 上の forEach について @@@@
+             @@@@ ${books} はList型なので、一要素ずつbookドメインオブジェクトを取り出し
+             @@@@ "book" という変数に格納しながら要素が無くなるまでループさせる
+             @@@@ -->
+
+    </table>
+    </body>
+    </html>
+    ```
 
 <h2 class="handson">4. ハンズオン実習</h2>
 
-### STEP02 ハンズオン
+### STEP03 ハンズオン
 
 {% for handson in site.handsons %}
-  {% if handson.step == 'STEP02' %}
+  {% if handson.step == 'STEP03' %}
     {% capture hurl %}{{ site.baseurl }}{{ handson.url }}{% endcapture %}
     {% capture hnam %}{{ handson.step }} - {{ handson.title }}{% endcapture %}
     {% break %}
@@ -252,11 +296,11 @@ date:   2017-04-17
 
 - **ハンズオン資料「 [{{ hnam }}]({{ hurl }}) 」に従い実習を開始してください。**
 
-    - メイン画面を作成して遷移させましょう
-    - 書籍一覧画面を作成して遷移させましょう
-    - 書籍登録フォーム画面を作成して遷移させましょう
-    - 書籍管理アプリ用のスタイルシートを作成しましょう
+    - DI を使用して Controller に Service オブジェクトをインジェクションしてみましょう
+    - DI を使用して Service に Dao オブジェクトをインジェクションしてみましょう
+    - インターフェースを使用して、インジェクションするオブジェクトを抽象化しましょう
+    - 書籍一覧画面に Book (Domain) オブジェクトの情報を表示させましょう
 
-### STEP02 実装イメージ
+### STEP03 実装イメージ
 
-![step02-flow]({{ site.baseurl }}/images/texts/text_step02_02.png "text02 Flow")
+![step03-flow]({{ site.baseurl }}/images/texts/text_step03_02.png "text03 Flow")
