@@ -13,14 +13,16 @@ date:   2017-04-15
 ### 1-1. 本トレーニングのゴール
 
 - Eclipse ＋ Spring Tool Suite ＋ Maven を使用した Webアプリケーション開発環境の構築ができる
-- Spring Framework が提供する以下の機能を利用した開発ができる
-- DI （Dependency Injection ： 依存性の注入）
-- AOP （Aspect Oriented Programming ： アスペクト指向プログラミング ）
-- Spring MVC （Webアプリケーション）
-- Spring JDBC （DBアクセス）
-- 入力データのValidation
-- その他（Annotation、Scope、Securiy、Transaction、etc・・） 
-- Spring Framework を使用したプログラムの単体試験ができる
+    - Spring Framework が提供する以下の機能を利用した開発ができる
+    - DI （Dependency Injection ： 依存性の注入）
+    - AOP （Aspect Oriented Programming ： アスペクト指向プログラミング ）
+    - Spring MVC （Webアプリケーション）
+    - Spring JDBC （DBアクセス）
+    - 入力データのValidation
+    - その他（Annotation、Scope、Securiy、Transaction、etc・・） 
+- Spring Framework を使用しアプリケーションのテストケースをプログラミングできる
+    - jUnit4、Mockito などを使用したテストコードを書くことができる
+    - Spring Test Runner の基本を把握する
 
 ### 1-2. 今回勉強しないこと
 
