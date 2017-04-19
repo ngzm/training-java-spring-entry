@@ -28,7 +28,7 @@ date:   2017-04-18
         - Spring JDBC を使用したデータベース検索方法を習得
         - データベース検索結果をドメインオブジェクトにマッピングする方法を把握する
 
-<h2 class="handson">2. 技術解説 - Spring JDBC</h2>
+<h2 class="handson">2. 技術解説 - Spring JDBC を使用したデータ検索処理</h2>
 
 ### 2-1. Spring JDBC とは
 
@@ -42,11 +42,11 @@ date:   2017-04-18
   これらの機能を利用することにより、プレーンなJDBCを使う場合に比べて、
   非常にシンプルなコードでデータベースアクセスを実装できるようになりました
 
-### 2-2. DI の適用箇所
+### 2-2. Spring JDBC の適用箇所
 
-- DI はアプリケーション全ての層に適用できる技術である
+- Spring JDBC はデータアクセス層に適用される
 
-![DIArchtecture]({{ site.baseurl }}/images/texts/tech_step03_01.png "Spring DI Archtecture")
+![JDBCArchtecture]({{ site.baseurl }}/images/texts/tech_step04_01.png "Spring JDBC Archtecture")
 
 | レイヤ | コンポーネント | 主な Spring 提供機能 |
 |:--|:--|:--|
@@ -54,144 +54,74 @@ date:   2017-04-18
 | ビジネスロジック層 | サービス、ドメイン | Validation、Spring Transaction、DI、AOP |
 | データアクセス層 | DAO | Spring JDBC、ORM、DI、AOP |
 
-### 2-3. DI の仕組み
+### 2-3. Spring JDBC によるデータベース検索の流れ
 
-- DI対象のオブジェクトは、DIを実現するための「DIコンテナ」と呼ばれる領域（箱）に格納される
+- Spring JDBC では、JdbcTemplate オブジェクトを使用してデータベースにアクセスする
 
-    ![DI-logical1]({{ site.baseurl }}/images/texts/tech_step03_02.png "DI Logic 01")
+    ![jdbc-logical1]({{ site.baseurl }}/images/texts/tech_step04_02.png "jdbc Logic 01")
 
-- インジェクションを要求するクラス変数があると、変数の型（もしくは名前）に合致するオブジェクトをDIコンテナから探し出して、該当変数にインジェクションする
+- JdbcTemplate を使用することにより、データベースコネクション、ステートメント、リザルトセット等、従来プログラミングする必要があった煩雑な処理を意識することなく、より簡単にデータベースアクセスを実装できるようになった
 
-    ![DI-logical2]({{ site.baseurl }}/images/texts/tech_step03_03.png "DI Logic 02")
+### 2-4. Spring JDBC を使用したDB検索処理
 
-### 2-4. アノテーションを使用した DI コンテナ格納
+#### 2-4-1. 単一データの取得コードサンプル
 
-- オブジェクトを生成して DI コンテナに格納するためには、下記の何れかのアノテーションをクラス定義に付与すれば良い。
-    1. @Controller
-    2. @Service
-    3. @Repository
-    4. @Component
-
-
-  これらのアノテーションを付与するだけでオブジェクト生成とDIコンテナ格納が自動的に実行される
- 
-
-- コントローラをDIコンテナに格納するサンプル
+1. 一つの数値を取得する場合
 
     ```java
-    @Controller  // @@@@ コントローラをDIコンテナに格納するアノテーション @@@@
-    public class BookController {
-      // Something to do ..
-
-    }
+    int number = jdbcTemplate.queryForInt("SELECT ....");
     ```
 
-- サービスをDIコンテナに格納するサンプル
+ 2. 一つのオブジェクト（主にStringやDateなど）を取得する場合
 
     ```java
-    @Service  // @@@@ サービスをDIコンテナに格納するアノテーション @@@@
-    public class ListBookServiceImpl implements ListBookService {
-      // Something to do ..
-      //書籍一覧取得サービス
-    }
+    String text = jdbcTemplate.queryForObject("SELECT ....");
     ```
 
-- Dao をDIコンテナに格納するサンプル
+3. ある単一行のデータをMap（Stringにカラム名、Objectにデータ）に格納する場合
 
     ```java
-    @Repository  // @@@@ Dao をDIコンテナに格納するアノテーション @@@@
-    public class ListBookDaoImpl implements ListBookDao {
-      // Something to do ..
-
-    }
+    int number = jdbcTemplate.queryForInt("SELECT ....");
     ```
 
-### 2-5. アノテーションを使用したインジェクション
-
-- DIコンテナに格納されているオブジェクトのうち、指定するオブジェクトをDIさせるには、クラス変数に、以下の何れかのアノテーションを付加すればよい
-
-    1. @Inject
-    2. @Autowired
-    3. @Resource
-
-    これらのアノテーションを付与することで指定オブジェクトの検索とインジェクションが実行される
-    **現在 @resource は殆ど使用されない、本トレーニングでは @Autowired を使用します**
-
-- 指定オブジェクトの検索方法は、型をベースに検索する方法（byType）と、名前による検索（byName）の2つがある、デフォルトは、byType による検索を行う
-
-- Dao をDIコンテナに格納するサンプル
+ 4. ある単一行のデータをドメインクラスにマッピングする場合
 
     ```java
-    @Controller 
-    public class BookController {
-      // @@@@
-      // @@@@ ByType で一致するオブジェクトをインジェクションする
-      // @@@@
-      @Autowired
-      ListBookService  listBookService; // @@@@ <-- 型が一致するオブジェクトが自動で代入される
-      
-      @RequestMapping(value = "/listbook", method = RequestMethod.GET)
-      public String listBook(Model model) throws Exception {
-        List<Book> books = listBookService.getBookList();
-        model.addAttribute("books", books);
-        return "listbook";
+    class myRowMapper implements RowMapper<Book> {
+      public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Book book = new Book();
+        book.setId(rs.getInt("ID");
+        book.setIsbn(rs.getString("ISBN");
+        book.setName(rs.getString("NAME");
+        return book;
       }
     }
+    Book book = jdbcTemplate.queryForObject (
+            "SELECT * FROM BOOK WEHRE ID = ?", new myRowMapper(), id);
     ```
 
-### 2-6. インターフェースで抽象化すること
+#### 2-4-2. 複数データの取得コードサンプル
 
-- DI でインジェクションさせるオブジェクトは、必ずインターフェースで実装を抽象化しておくことが非常に重要である！
-- インターフェースで抽象化することにより、ソースコードを変更することなく、実行時に実装クラスを差し替えることが可能となる
-
-  例えば、データ永続化の処理について、データ検索や更新などのインターフェースだけ決まっていれば、実際の永続化手段がデータベースなのか、ファイルなのかは実装クラスを差し替えれば対応できるようになる。
-
-- すなわち、これが依存しないということである
-
-    ![di-interface]({{ site.baseurl }}/images/texts/tech_step03_04.png "DI Interface")
-
-- インターフェースのサンプルコード
+1. 複数レコードのMap（Stringにカラム名、Objectにデータ）をListに格納する場合
 
     ```java
-    // 書籍一覧サービスクラスインターフェース
-    public interface ListBookService {
-      //書籍一覧取得サービス
-      public List<Book> getBookList() throws Exception;
-    }
+    List<Map<String, Object>> mapList = jdbcTemplate.queryForList("SELECT ...");
     ```
 
-- インジェクション対象の実装クラスのサンプルコード
+ 2. 複数レコードのデータをドメインクラスのListにマッピングする場合
 
     ```java
-    @Service
-    public class ListBookServiceImpl implements ListBookService {
-      //書籍一覧取得サービス
-      @Override
-      public List<Book> getBookList() throws Exception {
-        // Something to do
-        return  hoge;
+    implements RowMapper<Book> {
+      public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Book book = new Book();
+        book.setId(rs.getInt("ID");
+        book.setIsbn(rs.getString("ISBN");
+        book.setName(rs.getString("NAME");
+        return book;
       }
     }
+    List<Book> bookList = jdbcTemplate.query("SELECT * FROM BOOK", new myRowMapper());
     ```
-
-- インジェクションして利用するクラスのサンプルコード
-
-    ```java
-    @Controller 
-    public class BookController {
-      @Autowired
-      ListBookService  listBookService;
-
-      // Something to do
-    }
-    ```
-
-### 2-7. Spring 設定ファイルによる DI
-
-- Spring設定ファイルで、ＤＩ設定する方法もある（ただし本研修ではここで紹介する程度）
-- この方法は、ＤＩを集中的に設計・管理できるメリットが有る
-- このため、比較的大規模なアプリケーションの場合に有効である
-- そもそもSpringは 設定ファイルによるＤＩのみサポートしていたが、Spring2.5から、アノテーションによるＤＩがサポートされ、利便性が大幅に向上した経緯がある
 
 <h2 class="handson">3. 技術解説 - ドメイン情報を画面表示 - Spring MVC</h2>
 
