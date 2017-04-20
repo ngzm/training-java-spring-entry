@@ -123,47 +123,12 @@ date:   2017-04-18
     List<Book> bookList = jdbcTemplate.query("SELECT * FROM BOOK", new myRowMapper());
     ```
 
-<h2 class="handson">3. 技術解説 - ドメイン情報を画面表示 - Spring MVC</h2>
+<h2 class="handson">3. ハンズオン実習</h2>
 
-### 3-1. ドメインオブジェクトの情報を画面に渡す
-
-- Domain を画面（JSP）に渡すには、Spring MVC に用意されている Model オブジェクトを使う
-- Modelオブジェクトは、Model - View - Controller の Model に該当
-- すなわち、Controller からView に引き渡すデータを格納するオブジェクト
-
-    ![MVC model]({{ site.baseurl }}/images/texts/tech_step03_05.png "MVC Model")
-
-- Book ドメインを Model に登録するサンプルコード
-
-    ```java
-    @RequestMapping(value = "/listbook", method = RequestMethod.GET)
-    public String listBook(Model model) throws Exception {
-                  // @@@@   ↑
-                  // @@@@ Modelオブジェクトをコントローラメソッドの引数で取得
-                  // @@@@
-
-      // 書籍一覧取得ロジック処理、Domain オブジェクト取得
-      List<Book> books = listBookService.getBookList();
-
-      // 書籍一覧情報をモデルに登録
-      model.addAttribute("books", books);
-              // @@@@      ↑
-              // @@@@ Domain オブジェクト book を Model に登録
-              // @@@@ 上記の場合 "books" という名前で登録している
-              // @@@@
-
-      // 画面表示に listbook.jsp を呼び出す
-      return "listbook";
-    }
-    ```
-
-
-<h2 class="handson">4. ハンズオン実習</h2>
-
-### STEP02 ハンズオン
+### STEP04 ハンズオン
 
 {% for handson in site.handsons %}
-  {% if handson.step == 'STEP02' %}
+  {% if handson.step == 'STEP04' %}
     {% capture hurl %}{{ site.baseurl }}{{ handson.url }}{% endcapture %}
     {% capture hnam %}{{ handson.step }} - {{ handson.title }}{% endcapture %}
     {% break %}
@@ -172,11 +137,12 @@ date:   2017-04-18
 
 - **ハンズオン資料「 [{{ hnam }}]({{ hurl }}) 」に従い実習を開始してください。**
 
-    - メイン画面を作成して遷移させましょう
-    - 書籍一覧画面を作成して遷移させましょう
-    - 書籍登録フォーム画面を作成して遷移させましょう
-    - 書籍管理アプリ用のスタイルシートを作成しましょう
+    - Spring JDBC の概要を学習しましょう
+    - Spring JDBC を利用するための環境を構築しましょう
+    - Spring JDBC を使用してデータベースから書籍情報一覧を取得しましょう
+        - JdbcTemplate の使い方を覚えましょう
+        - RowMapper でドメインにマッピングする方法を把握しましょう
 
-### STEP02 実装イメージ
+### STEP04 実装イメージ
 
-![step02-flow]({{ site.baseurl }}/images/texts/text_step02_02.png "text02 Flow")
+![step04-flow]({{ site.baseurl }}/images/texts/text_step04_02.png "text04 Flow")
