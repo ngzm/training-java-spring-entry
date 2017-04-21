@@ -218,11 +218,12 @@ date:   2017-04-18
 
 - **ハンズオン資料「 [{{ hnam }}]({{ hurl }}) 」に従い実習を開始してください。**
 
-    - Spring JDBC の概要を学習しましょう
-    - Spring JDBC を利用するための環境を構築しましょう
-    - Spring JDBC を使用してデータベースから書籍情報一覧を取得しましょう
-        - JdbcTemplate の使い方を覚えましょう
-        - RowMapper でドメインにマッピングする方法を把握しましょう
+    - Spring MVC によるデータ登録方法を学習しましょう
+        - Spring Form Tag の考え方、使い方を把握しましょう
+        - フォームに入力した値を Controller で受け取る方法を習得しましょう
+        - Controller メソッドの引数として取得できる情報を学習しましょう
+    - Spring JDBC を使用したデータベース更新方法を覚えましょう
+        - NamedParameterJdbcTemplate の使い方を覚えましょう
 
 ### STEP05 実装イメージ - 処理シーケンス
 
