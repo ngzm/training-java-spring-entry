@@ -39,6 +39,102 @@ date:   2017-04-18
     - 学習ポイント
         - 書籍登録処理結果の表示（とりあえず正常系のみ。異常系はこの後）
 
+<h2 class="handson">2. 技術解説 - フォームから入力データを取得する - Spring MVC</h2>
+
+### 2-1. Spring MVC によるデータ登録の流れ
+
+- フォーム画面より入力したデータは、Spring MVC の Model オブジェクトにマッピングされる
+- 入力データをマッピングした Model オブジェクトは、Controller メソッドの引数として渡される
+
+![mvc-logical1]({{ site.baseurl }}/images/texts/tech_step05_01.png "MVC Logic 01")
+
+### 2-2. Spring Form Tag を使用した入力フォーム
+
+- Spring MVC でフォーム画面を実装するには、Spring MVC に用意されている Spring Form Tag が便利
+
+    ```jsp
+    <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+    <!-- @@@
+         @@@ 上のtaglibディレクティブで Spring Form taglibrary を取り込む
+         @@@ -->
+
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <html>
+    <head><title>書籍登録画面</title></head>
+    <body>
+    <h1>書籍登録画面</h1>
+
+    <form:form action="addbook" method="POST" modelAttribute="book">
+                <!-- @@@
+                     @@@ modelAttribute で Model とドメインオブジェクトがマッピングされる
+                     @@@ 上記の場合、"book" という名前の Book オブジェクトとして取得される
+                     @@@ -->
+
+      <table><tr>
+        <th>ISBNコード</th>
+        <td><form:input path="isbn"/></td>
+      </tr><tr>
+        <th>書籍名</th>
+        <td><form:input path="name"/></td>
+      </tr><tr>
+        <th>価格</th>
+        <td><form:input path="price"/></td>
+      </tr></table>
+                <!-- @@@
+                     @@@ 取り出したBookオブジェクトの各プロパティには
+                     @@@ isbn や name などのプロパティ名だけでアクセスできる
+                     @@@ -->
+
+      <input type="submit" value="登録" />
+    </form:form>
+    </body>
+    </html>
+    ```
+
+- 上記フォームは、input タグの例であるが、この他にも、SELECT や CHECKBOX など比較的複雑なタグもSpring Form Tab で記述できる
+
+### 2-3. フォームで入力されたデータを Controller で受け取る
+
+- フォームで入力されたデータは、HTTP POST でサーバに送信されるが、そのデータは Spring MVC で Model の modelAttribute に追加される。
+- modelAttribute に追加された Domain は、Controller メソッドの引数として受け取ることが可能
+- modelAttribute の登録名はドメインクラス名から自動的に決定されるが、Controller に引数に @ModelAttribute アノテーションを付与すると任意の登録名でもデータを取得することができる
+
+    ```java
+    @RequestMapping(value = "/addbook", method = RequestMethod.POST)
+    public String addBook(@ModelAttribute("book") Book book) throws Exception {
+                    // @@@@   ↑ 
+                    // @@@@ フォーム入力値（リクエストパラメータ）は自動的に
+                    // @@@@ ドメインオブジェクトに格納され、コントローラの引数
+                    // @@@@ として受け取ることができる
+                    // @@@@ 
+
+
+      // Something to do
+      // ...
+    }
+    ```
+
+### 2-4. Controller メソッドの引数について
+
+- Controller メソッドの引数として渡される情報は @ModelAttribute なオブジェクトに限らない
+- 以下の情報がメソッド引数として渡されてくるためアプリで受け取ることができる
+
+    1. URIテンプレートを使用した時の ＠PathVariable を付けた変数
+    1. HTTPリクエストパラメータ @RequestParam を付けた変数
+    1. アップロードファイル
+    1. HTTPリクエストヘッダ @RequestHeader を付けた変数
+    1. クッキー @Cookie を付けた変数
+    1. HTTPリクエストのメッセージボディ @RequestBody を付けた変数
+    1. HTTPEntityオブジェクト
+    1. Model オブジェクト
+    1. ModelAttributeオブジェクト @ModelAttribute を付けた変数
+    1. Session管理オブジェクト
+    1. エラーオブジェクト
+    1. WebRequestオブジェクト
+    1. Servlet API の各種オブジェクト
+    1. ロケール
+    1. その他
+
 <h2 class="handson">3. 技術解説 - Spring JDBC を使用したデータ更新処理</h2>
 
 ### 3-1. Spring JDBC によるデータベース更新の流れ
