@@ -62,7 +62,7 @@ date:   2017-04-18
 
 - JdbcTemplate を使用することにより、データベースコネクション、ステートメント、リザルトセット等、従来プログラミングする必要があった煩雑な処理を意識することなく、より簡単にデータベースアクセスを実装できるようになった
 
-### 2-4. Spring JDBC を使用したDB検索処理
+### 2-4. Spring JDBC を使用したDB検索プログラミング
 
 #### 2-4-1. 単一データの取得コードサンプル
 
@@ -90,14 +90,14 @@ date:   2017-04-18
     class myRowMapper implements RowMapper<Book> {
       public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
         Book book = new Book();
-        book.setId(rs.getInt("ID");
-        book.setIsbn(rs.getString("ISBN");
-        book.setName(rs.getString("NAME");
+        book.setId(rs.getInt("id");
+        book.setIsbn(rs.getString("isbn");
+        book.setName(rs.getString("name");
         return book;
       }
     }
     Book book = jdbcTemplate.queryForObject (
-            "SELECT * FROM BOOK WEHRE ID = ?", new myRowMapper(), id);
+            "SELECT * FROM book WEHRE id = ?", new myRowMapper(), id);
     ```
 
 #### 2-4-2. 複数データの取得コードサンプル
@@ -114,13 +114,13 @@ date:   2017-04-18
     implements RowMapper<Book> {
       public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
         Book book = new Book();
-        book.setId(rs.getInt("ID");
-        book.setIsbn(rs.getString("ISBN");
-        book.setName(rs.getString("NAME");
+        book.setId(rs.getInt("id");
+        book.setIsbn(rs.getString("isbn");
+        book.setName(rs.getString("name");
         return book;
       }
     }
-    List<Book> bookList = jdbcTemplate.query("SELECT * FROM BOOK", new myRowMapper());
+    List<Book> bookList = jdbcTemplate.query("SELECT * FROM book", new myRowMapper());
     ```
 
 <h2 class="handson">3. ハンズオン実習</h2>
