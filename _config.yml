@@ -28,3 +28,4 @@ markdown: kramdown
 # Excludes
 exclude:
   - vendor
+  - imagebase
