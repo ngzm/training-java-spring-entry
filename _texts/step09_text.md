@@ -1,11 +1,11 @@
 ---
 layout: handson
 step:   "STEP09"
-title:  "Spring アプリケーションのテストコード作成 その1単体テスト"
+title:  "テストコードの書き方を覚えよう - その1単体テスト"
 date:   2017-04-23
 ---
 
-<h2 class="handson">1. Spring アプリケーションのテストコード作成</h2>
+<h2 class="handson">1. テストコードの書き方を覚えよう - その1単体テスト</h2>
 
 ### 1-1. 実習テーマ
 
@@ -209,9 +209,7 @@ date:   2017-04-23
 
 ![mockito_image]({{ site.baseurl }}/images/texts/tech_step09_01.png "Mockito Image")
 
-- Mockito を使用したテストコード例
-    - Mockito ライブラリを使用する場合のおまじないコード
-    - when ... thenReturn メソッドを使用する例
+- Mockito を使用したテストコード例 - Mockito ライブラリを使用する場合のおまじないコード および when ... thenReturn メソッドを使用する例
 
     ```java
     public class ListBookDaoSpringJdbcTest {
@@ -272,8 +270,7 @@ date:   2017-04-23
 
 ### 2-6. Mockito を使用したテストコード例 - その2
 
-- Mockito を使用したテストコード例
-    - verify メソッドを使用したコード例
+- Mockito を使用したテストコード例 - verify メソッドを使用したテスト
 
     ```java
     @Test
