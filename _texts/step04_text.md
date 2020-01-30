@@ -146,3 +146,16 @@ date:   2017-04-18
 ### STEP04 実装イメージ
 
 ![step04-flow]({{ site.baseurl }}/images/texts/text_step04_02.png "text04 Flow")
+
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP05' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。中盤戦です。

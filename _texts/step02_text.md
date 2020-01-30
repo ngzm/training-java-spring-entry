@@ -133,3 +133,16 @@ date:   2017-04-16
 ### STEP02 実装イメージ
 
 ![step02-flow]({{ site.baseurl }}/images/texts/text_step02_02.png "text02 Flow")
+
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP03' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。こちらはとても大事な仕様です。

@@ -304,3 +304,16 @@ date:   2017-04-17
 ### STEP03 実装イメージ
 
 ![step03-flow]({{ site.baseurl }}/images/texts/text_step03_02.png "text03 Flow")
+
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP04' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。いい感じです。

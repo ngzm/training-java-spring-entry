@@ -163,3 +163,16 @@ date:   2017-04-21
     - Validation 実装にむけた環境設定方法をマスターしましょう
     - アノテーションを使用した Validation 定義方法を覚えましょう
     - Validation エラーハンドリング と エラーメッセージの表示方法を理解しましょう
+
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP07' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。もうちょいだ！

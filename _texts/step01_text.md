@@ -143,3 +143,15 @@ date:   2017-04-15
     - テスト用ファイルは /src/test に配置する
     - /src/test は、テスト実行時のみクラスパスに追加される
     - ソースコードは  java に、リソースファイル等は resources に配置する
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP02' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。サクサク行きましょう

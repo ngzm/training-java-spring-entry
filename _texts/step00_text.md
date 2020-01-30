@@ -90,3 +90,15 @@ Let's study! Enjoy study Spring Framework.**
 
 **ここでは先ず、ハンズオン資料の読み方を把握してください。  
 ハンズオン資料の読み方は「 [{{ hnam }}]({{ hurl }}) 」にてご確認ください。**
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP01' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。さっそく始めましょう

@@ -232,3 +232,15 @@ date:   2017-04-18
 ### STEP05 実装イメージ - Spring JDBC によるデータ登録・更新処理
 
 ![step05-flow2]({{ site.baseurl }}/images/texts/text_step05_03.png "text05 Flow2")
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP06' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。だいぶ進んできました！

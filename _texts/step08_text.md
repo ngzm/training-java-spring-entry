@@ -189,3 +189,15 @@ date:   2017-04-22
 
     - AOP を利用するための環境設定方法を習得しましょう
     - Aspect クラスの実装方法をマスターしましょう
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP09' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。もう少しで終わりです！

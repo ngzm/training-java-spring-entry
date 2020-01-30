@@ -105,3 +105,16 @@ date:   2017-04-22
 
     - アプリケーション共通の例外ハンドリング実装方法を把握しましょう
     - 発生した例外のエラーメッセージを画面に表示させましょう
+
+
+<h4 class="handson">次のステップ</h4>
+
+{% for txt in site.texts %}
+  {% if txt.step == 'STEP08' %}
+    {% capture turl %}{{ site.baseurl }}{{ txt.url }}{% endcapture %}
+    {% capture tnam %}{{ txt.step }} - {{ txt.title }}{% endcapture %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+次のステップは「 [{{ tnam }}]({{ turl }}) 」です。こちらも非常に重要な仕組みです！
